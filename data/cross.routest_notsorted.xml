@@ -1,0 +1,20 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+<vType id="test" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="300" jmTimegapMinor="0" jmIgnoreJunctionFoeProb="1" jmCrossingGap="0" sigma="1" guiShape="passenger/van" /><vehicle id="1001" depart="501.00" color="0,0,1" type="test"><route edges="101 3" />
+    </vehicle>    
+    <vehicle id="1004" depart="1.00" color="0,0,1" type="test"><route edges="102 4" />
+    </vehicle>    
+    <vehicle id="1007" depart="1.00" color="0,0,1" type="test"><route edges="104 2" />
+    </vehicle>    
+    <vehicle id="1002" depart="1.00" color="1,0,0" type="test"><route edges="101 3" />
+    </vehicle>    
+    <vehicle id="1005" depart="3.00" color="1,0,0" type="test"><route edges="102 4" />
+    </vehicle>    
+    <vehicle id="1008" depart="3.00" color="1,0,0" type="test"><route edges="104 2" />
+    </vehicle>    
+    <vehicle id="1003" depart="3.00" color="0,1,0" type="test"><route edges="101 3" />
+    </vehicle>    
+    <vehicle id="1006" depart="5.00" color="0,1,0" type="test"><route edges="102 4" />
+    </vehicle>    
+    <vehicle id="1009" depart="5.00" color="0,1,0" type="test"><route edges="104 2" />
+    </vehicle>    
+    </routes>

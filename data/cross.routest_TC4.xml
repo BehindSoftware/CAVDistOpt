@@ -1,0 +1,103 @@
+<routes>
+    <vType id="test" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="300" jmTimegapMinor="0" jmIgnoreJunctionFoeProb="1" jmCrossingGap="0" sigma="1" guiShape="passenger/van" length="4" maxSpeed="330"/>
+    <vehicle id="1004" depart="1.00" color="0,0,1" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="1007" depart="1.00" color="0,0,1" type="test"><route edges="104 2"/>
+    </vehicle>
+    <vehicle id="1002" depart="1.00" color="1,0,0" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="2004" depart="1.00" color="0,0,1" type="test"><route edges="119 16 1007 103 2"/>
+    </vehicle>
+    <vehicle id="2007" depart="1.00" color="0,0,1" type="test"><route edges="107 6"/>
+    </vehicle>
+    <vehicle id="2002" depart="1.00" color="1,0,0" type="test"><route edges="108 7 1003 114 13"/>
+    </vehicle>
+    <vehicle id="3001" depart="1.00" color="0,0,1" type="test"><route edges="104 2 1001 109"/>
+    </vehicle>
+    <vehicle id="3002" depart="1.00" color="0,0,1" type="test"><route edges="101 3 1008 116"/>
+    </vehicle>
+    <vehicle id="3003" depart="1.00" color="1,0,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="3004" depart="1.00" color="1,0,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="3005" depart="2.00" color="1,0,0" type="test"><route edges="104 2 1001 109"/>
+    </vehicle>
+    <vehicle id="3006" depart="2.00" color="0,1,0" type="test"><route edges="101 3 1008 116"/>
+    </vehicle>
+    <vehicle id="3007" depart="2.00" color="0,1,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="3008" depart="2.00" color="0,1,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="6005" depart="2.00" color="0,1,0" type="test"><route edges="122 23 1022 136 39"/>
+    </vehicle>
+    <vehicle id="6006" depart="2.00" color="0,1,0" type="test"><route edges="124 21 1011 108 7"/>
+    </vehicle>
+    <vehicle id="6007" depart="2.00" color="0,1,0" type="test"><route edges="139 36 1021 123"/>
+    </vehicle>
+    <vehicle id="6008" depart="2.00" color="0,1,0" type="test"><route edges="18 1018 131 32 1015 139 38"/>
+    </vehicle>
+    <vehicle id="1005" depart="3.00" color="1,0,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="1008" depart="3.00" color="1,0,0" type="test"><route edges="104 2"/>
+    </vehicle>
+    <vehicle id="1003" depart="3.00" color="0,1,0" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="2005" depart="3.00" color="1,0,0" type="test"><route edges="109 7 1003 114 11"/>
+    </vehicle>
+    <vehicle id="2008" depart="3.00" color="1,0,0" type="test"><route edges="106 8 1012 121 22 1009 129 27"/>
+    </vehicle>
+    <vehicle id="2003" depart="3.00" color="0,1,0" type="test"><route edges="107 8 1012 121 23 1022 136 38"/>
+    </vehicle>
+    <vehicle id="4005" depart="3.00" color="1,0,0" type="test"><route edges="104 2 1001 109"/>
+    </vehicle>
+    <vehicle id="4006" depart="3.00" color="0,1,0" type="test"><route edges="101 3 1008 116"/>
+    </vehicle>
+    <vehicle id="4007" depart="3.00" color="0,1,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="4008" depart="3.00" color="0,1,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="4009" depart="3.00" color="0,1,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="4010" depart="3.00" color="0,1,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="4001" depart="4.00" color="0,0,1" type="test"><route edges="104 2 1001 109"/>
+    </vehicle>
+    <vehicle id="4002" depart="4.00" color="0,1,0" type="test"><route edges="101 3 1008 116"/>
+    </vehicle>
+    <vehicle id="4003" depart="4.00" color="1,0,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="4004" depart="4.00" color="1,0,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="1006" depart="5.00" color="0,1,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="1009" depart="5.00" color="0,1,0" type="test"><route edges="104 2"/>
+    </vehicle>
+    <vehicle id="1001" depart="5.00" color="0,0,1" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="2006" depart="5.00" color="0,1,0" type="test"><route edges="133 32 1015 139 38"/>
+    </vehicle>
+    <vehicle id="2009" depart="5.00" color="0,1,0" type="test"><route edges="143 41 1023 128 27"/>
+    </vehicle>
+    <vehicle id="2001" depart="5.00" color="0,0,1" type="test"><route edges="142 44 1020 137 39 1016 132 33"/>
+    </vehicle>
+    <vehicle id="5001" depart="5.00" color="0,1,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="5002" depart="5.00" color="0,1,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="5003" depart="5.00" color="0,1,0" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="5004" depart="5.00" color="0,1,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="6001" depart="6.00" color="0,1,0" type="test"><route edges="127 28 1024 141 42"/>
+    </vehicle>
+    <vehicle id="6002" depart="6.00" color="0,1,0" type="test"><route edges="126 29 1010 122 23"/>
+    </vehicle>
+    <vehicle id="6003" depart="6.00" color="0,1,0" type="test"><route edges="128 26 1013 113"/>
+    </vehicle>
+    <vehicle id="6004" depart="6.00" color="0,1,0" type="test"><route edges="127 29 1010 122 21"/>
+    </vehicle>
+    <vehicle id="1010" depart="7.00" color="0,0,1" type="test"><route edges="108 6"/>
+    </vehicle>
+    <vehicle id="2010" depart="7.00" color="0,0,1" type="test"><route edges="127 29 1010 122 24 1006 117 19"/>
+    </vehicle>
+</routes>
