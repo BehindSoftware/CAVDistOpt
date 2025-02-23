@@ -1,7 +1,7 @@
 import cvxpy as cp
 import numpy as np
 
-def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict):
+def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict, car_index):
     #Constants
     t = parameters[0]                           #time scale: t is the measurement frequency, it can be 1 second for now.
     epsilon_prime = parameters[1] * 1000 / 3600 #km/h to m/s conversion for desired velocity
@@ -13,10 +13,17 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     lv = parameters[7]                          #Length of vehicle (m)
     F = 495
 
-    #decision variables -> #platooning is started from 2 to (number_of_vehicle+2) because 1 for range(started with 0) 1 for second car(not intersected), lane will be constant
-    v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(2, number_of_vehicle + 2) if xr_cons[(number_of_lane, j)] != 0} 
-    x = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(2, number_of_vehicle + 2) if xr_cons[(number_of_lane, j)] != 0}
-    a = {(number_of_lane, j): cp.Variable() for j in range(2, number_of_vehicle + 2) if xr_cons[(number_of_lane, j)] != 0}
+    # HERE: Think, we need to check one prior car, there is or there is not, maybe the start from the last car is correct in car_index
+    if(number_of_vehicle==0):
+        print("There is no vehicle")
+        pass
+    else:
+        #decision variables -> #platooning is started from 2 to (number_of_vehicle+2) because 1 for range(started with 0) 1 for second car(not intersected), lane will be constant
+        v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + number_of_vehicle) if xr_cons[(number_of_lane, j)] != 0} 
+        x = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + number_of_vehicle) if xr_cons[(number_of_lane, j)] != 0}
+        a = {(number_of_lane, j): cp.Variable() for j in range(car_index, car_index + number_of_vehicle) if xr_cons[(number_of_lane, j)] != 0}
+
+
 
     #constraints
     constraints = []
@@ -109,6 +116,49 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
 
     return distance
 
+def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
+
+    if (number_of_lane, idx) in xr_cons and idx == 1: #First car
+        number_of_vehicle = 0 #skip first car
+        pass
+    elif (number_of_lane, idx) in xr_cons and (number_of_lane, idx + 1) in xr_cons: #If there is car in next lane
+        v_vehicle = {
+            (number_of_lane,idx): v_input[(number_of_lane, idx)],
+            (number_of_lane,idx+1): v_input[(number_of_lane,idx+1)]
+        }
+        x_vehicle = {
+            (number_of_lane,idx): x_input.get((number_of_lane,idx), None),
+            (number_of_lane,idx+1): x_input.get((number_of_lane,idx+1), None)
+        }
+        xrcons_vehicle = {
+            (number_of_lane,idx): xr_cons.get((number_of_lane,idx), None),
+            (number_of_lane,idx+1): xr_cons.get((number_of_lane,idx+1), None)
+        }
+        xpos_vehicle = {
+            (number_of_lane,idx): x_pos.get((number_of_lane,idx), None),
+            (number_of_lane,idx+1): x_pos.get((number_of_lane,idx+1), None)
+        }
+        number_of_vehicle = 2
+    elif (idx, 1) in xr_cons:   #If there is no car in next lane
+        v_vehicle = {
+            (number_of_lane,idx): v_input[(number_of_lane,idx)],
+        }
+        x_vehicle = {
+            (number_of_lane,idx): x_input.get((number_of_lane,idx), None),
+        }
+        xrcons_vehicle = {
+            (number_of_lane,idx): xr_cons.get((number_of_lane,idx), None),
+        }
+        xpos_vehicle = {
+            (number_of_lane,idx): x_pos.get((number_of_lane,idx), None),
+        }
+        number_of_vehicle = 1
+    else:               #If the car does not exist in that lane
+        number_of_vehicle = 0
+
+    print(v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle)
+    return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle
+
 def test_dist_opt():
     v_input = {(1, 1): 9.768100274959579, (2, 1): 1.8596483482979238, (3, 1): 11.0, (3, 2): 4.0, (4, 1): 11.77369166086428, (1, 2): 0, (1, 3): 0, (1, 4): 0, (1, 5): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0, (2, 5): 0, (3, 3): 0, (3, 4): 0, (3, 5): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0, (4, 5): 0}
     x_input = {(1, 1): 13.995449316874145, (2, 1): 492, (3, 1): 480, (3, 2): 475, (4, 1): 18.80794448377565, (1, 2): 0, (1, 3): 0, (1, 4): 0, (1, 5): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0, (2, 5): 0, (3, 3): 0, (3, 4): 0, (3, 5): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0, (4, 5): 0}
@@ -121,8 +171,19 @@ def test_dist_opt():
     RHO = 1.0 
     parameters = [1, 80, -7, 7, 0.49, 1, 2.5, 4]
     distances_dict = {}
+    xr_dict = {}
 
-    platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict)
+    # TO DO: firstly just lane 1
+    number_of_lane = 1
+    # Extract unique indices that have (index,1) as a key
+    indices = sorted(set(k[1] for k in xr_cons.keys() if k[0] == number_of_lane))
+    print(indices)
+    for idx in indices:
+        if idx!=1:
+            number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx)
+            platooning_optimization(number_of_lane, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters, z, u, RHO, distances_dict, xr_dict, idx)
+
+    #platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict)
     print("Test finished")
 
-#test_dist_opt()
+test_dist_opt()

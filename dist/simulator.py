@@ -1,6 +1,6 @@
 import traci
 
-DIST_OPT=False
+DIST_OPT=True
 #from veh_opt import get_parameters_on_the_intersection, create_the_inputs, set_optimized_acceleration
 if(DIST_OPT==False):
     from opt_lib import get_optimized_acceleration

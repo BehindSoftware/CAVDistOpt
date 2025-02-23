@@ -1,7 +1,8 @@
 import cvxpy as cp
 import numpy as np
 
-def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict):
+def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict, car_index):
+    
     #Constants
     t = parameters[0]                           #time scale: t is the measurement frequency, it can be 1 second for now.
     epsilon_prime = parameters[1] * 1000 / 3600 #km/h to m/s conversion for desired velocity
@@ -13,10 +14,14 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
     lv = parameters[7]                          #Length of vehicle (m)
     F = 495
 
-    #decision variables
-    v = {(i, 1): cp.Variable(nonneg=True) for i in range(1, number_of_lane + 1) if xr_cons[(i, 1)] != 0}
-    x = {(i, 1): cp.Variable(nonneg=True) for i in range(1, number_of_lane + 1) if xr_cons[(i, 1)] != 0}
-    a = {(i, 1): cp.Variable() for i in range(1, number_of_lane + 1) if xr_cons[(i, 1)] != 0}
+    if(number_of_vehicle==0):
+        print("There is no vehicle")
+        pass
+    else:
+        #decision variables (scan each lane and define variable for having car)
+        v = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0} #car_index is that car, car_index+1+1 one for next car one for range typo
+        x = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
+        a = {(i, 1): cp.Variable() for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
 
     #constraints
     constraints = []
@@ -29,7 +34,7 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
 
     # print("v_input: ",v_input)
     # print("x_input: ",x_input)
-    # print("xr_cons: ",xr_cons)
+    print("xr_cons: ",xr_cons)
     # print("x_pos  : ",x_pos)
 
     # x constraints
@@ -43,41 +48,42 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
             constraints.append(v[i, 1] == a[i, 1] * t + v_input[(i, 1)])
 
     # Lane crossing constraints
-    for lane in range(2, 5):
-        for i in range(1, number_of_lane + 1):
-            if xr_cons[(i, 1)] != 0 and xr_cons[(lane, 1)] != 0 and i < lane:
-                if(x_pos[i,1]<F and x_pos[lane,1]<F): #Checks this is the first intersection for cars, if not m.F will be increased because of usage distance travelled X^t+1
-                    if x_pos[(i, 1)] >= F - epsilon_prime and x_pos[(lane, 1)] >= F - epsilon_prime:
+    if(number_of_vehicle==2):
+        for i in range(car_index, car_index + 1): #+1 because just one constraint for two cars
+            if xr_cons[(i, 1)] != 0 and xr_cons[(i+1, 1)] != 0:
+                if(x_pos[i,1]<F and x_pos[i+1,1]<F): #Checks this is the first intersection for cars, if not m.F will be increased because of usage distance travelled X^t+1
+                    if x_pos[(i, 1)] >= F - epsilon_prime and x_pos[(i+1, 1)] >= F - epsilon_prime:
                         check_for_will_pass_inters = x_pos[i,1]+v_input[i,1]-F
-                        check_for_will_pass_inters_lane2 = x_pos[lane,1]+v_input[lane,1]-7-F
-                        print(i,1,lane,1)
+                        check_for_will_pass_inters_lane2 = x_pos[i+1,1]+v_input[i+1,1]-7-F
+                        print(i,1,i+1,1)
                         if(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2<0): #This checks for absolute between F and X^t+1
-                            constraints.append((F-x[i,1])+(F-x[lane,1])>=(lv+D))
+                            constraints.append((F-x[i,1])+(F-x[i+1,1])>=(lv+D))
                         elif(check_for_will_pass_inters>0 and check_for_will_pass_inters_lane2<0):
-                            constraints.append((x[i,1]-F)+(F-x[lane,1])>=(lv+D))
+                            constraints.append((x[i,1]-F)+(F-x[i+1,1])>=(lv+D))
                         elif(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2>0):
-                            constraints.append((F-x[i,1])+(x[lane,1]-F)>=(lv+D))
+                            constraints.append((F-x[i,1])+(x[i+1,1]-F)>=(lv+D))
                         else:
-                            constraints.append((x[i,1]-F)+(x[lane,1]-F)>=(lv+D))
-                elif(x_input[i,1]>F and x_input[lane,1]<F):
-                    constraints.append ((2*F-x[i,1])+(F-x[lane,1])>=(lv+D))
-                elif(x_input[i,1]<F and x_input[lane,1]>F):
-                    constraints.append ((F-x[i,1])+(2*F-x[lane,1])>=(lv+D))
-                elif(x_input[i,1]>F and x_input[lane,1]>F):
-                    constraints.append ((2*F-x[i,1])+(2*F-x[lane,1])>=(lv+D))
-                elif(x_input[i,1]>2*F and x_input[lane,1]>2*F):
-                    constraints.append ((3*F-x[i,1])+(3*F-x[lane,1])>=(lv+D))
+                            constraints.append((x[i,1]-F)+(x[i+1,1]-F)>=(lv+D))
+                elif(x_input[i,1]>F and x_input[i+1,1]<F):
+                    constraints.append ((2*F-x[i,1])+(F-x[i+1,1])>=(lv+D))
+                elif(x_input[i,1]<F and x_input[i+1,1]>F):
+                    constraints.append ((F-x[i,1])+(2*F-x[i+1,1])>=(lv+D))
+                elif(x_input[i,1]>F and x_input[i+1,1]>F):
+                    constraints.append ((2*F-x[i,1])+(2*F-x[i+1,1])>=(lv+D))
+                elif(x_input[i,1]>2*F and x_input[i+1,1]>2*F):
+                    constraints.append ((3*F-x[i,1])+(3*F-x[i+1,1])>=(lv+D))
                 else:
                     pass
 
+    # TO DO: I am not sure the other car should be limited
     # Velocity constraints: v should be between 0 and epsilon_prime
-    for i in range(1, number_of_lane + 1):
+    for i in range(car_index, car_index + number_of_vehicle):
         if xr_cons[(i, 1)] != 0:
             constraints.append(v[i, 1] >= 0)  # v >= 0 (nonnegative)
             constraints.append(v[i, 1] <= epsilon_prime)  # v <= epsilon_prime
 
     # Acceleration constraints: a should be between alfa and alfa_prime
-    for i in range(1, number_of_lane + 1):
+    for i in range(car_index, car_index + number_of_vehicle):
         if xr_cons[(i, 1)] != 0:
             constraints.append(a[i, 1] >= alfa)  # a >= alfa (minimum acceleration)
             constraints.append(a[i, 1] <= alfa_prime)  # a <= alfa_prime (maximum acceleration)
@@ -90,12 +96,10 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
     objective = cp.Minimize(
     cp.sum([
         xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
-        + (RHO / 2) * cp.sum_squares(x[(i, 1)] - z + u) #TO DO: check maybe u/rho 
-        for i in range(1, number_of_lane + 1)
+        for i in range(car_index, car_index + number_of_vehicle)
         if xr_cons[(i, 1)] != 0
     ])
     )
-
 
     #test
     print(f"Objective function: {objective}")
@@ -103,7 +107,6 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
     # Problem
     problem = cp.Problem(objective, constraints)
     problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)
-
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
@@ -123,7 +126,7 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
         distance = [0] * (number_of_lane * number_of_vehicle) #Reset values
     else:
         print("Solution found.")
-        for i in range(1, number_of_lane + 1):
+        for i in range(car_index, car_index + number_of_vehicle):
             if (i, 1) in x and x[(i, 1)].value is not None:
                 distance.append(x[(i, 1)].value)
                 distances_dict[(i, 1)] = x[(i, 1)].value
@@ -133,6 +136,60 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
     #TO DO: fill distances_list as dict for each car distances
 
     return distance
+
+def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
+
+    if (idx, 1) in xr_cons and idx == number_of_lane: #Last lane
+        v_vehicle = {
+            (idx,1): v_input[(idx, 1)],
+        }
+        x_vehicle = {
+            (idx,1): x_input.get((idx, 1), None),
+        }
+        xrcons_vehicle = {
+            (idx,1): xr_cons.get((idx, 1), None),
+        }
+        xpos_vehicle = {
+            (idx,1): x_pos.get((idx, 1), None),
+        }
+        number_of_vehicle = 1
+    elif (idx, 1) in xr_cons and (idx + 1, 1) in xr_cons: #If there is car in next lane
+        v_vehicle = {
+            (idx,1): v_input[(idx, 1)],
+            (idx+1,1): v_input[(idx + 1, 1)]
+        }
+        x_vehicle = {
+            (idx,1): x_input.get((idx, 1), None),
+            (idx+1,1): x_input.get((idx + 1, 1), None)
+        }
+        xrcons_vehicle = {
+            (idx,1): xr_cons.get((idx, 1), None),
+            (idx+1,1): xr_cons.get((idx + 1, 1), None)
+        }
+        xpos_vehicle = {
+            (idx,1): x_pos.get((idx, 1), None),
+            (idx+1,1): x_pos.get((idx + 1, 1), None)
+        }
+        number_of_vehicle = 2
+    elif (idx, 1) in xr_cons:   #If there is no car in next lane
+        v_vehicle = {
+            (idx,1): v_input[(idx, 1)],
+        }
+        x_vehicle = {
+            (idx,1): x_input.get((idx, 1), None),
+        }
+        xrcons_vehicle = {
+            (idx,1): xr_cons.get((idx, 1), None),
+        }
+        xpos_vehicle = {
+            (idx,1): x_pos.get((idx, 1), None),
+        }
+        number_of_vehicle = 1
+    else:               #If the car does not exist in that lane
+        number_of_vehicle = 0
+
+    print(v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle)
+    return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle
 
 def test_dist_opt():
     v_input = {(1, 1): 9.768100274959579, (2, 1): 1.8596483482979238, (3, 1): 11.0, (3, 2): 4.0, (4, 1): 11.77369166086428, (1, 2): 0, (1, 3): 0, (1, 4): 0, (1, 5): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0, (2, 5): 0, (3, 3): 0, (3, 4): 0, (3, 5): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0, (4, 5): 0}
@@ -146,8 +203,15 @@ def test_dist_opt():
     RHO = 1.0 
     parameters = [1, 80, -7, 7, 0.49, 1, 2.5, 4]
     distances_dict = {}
+    xr_dict = {}
 
-    intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict)
+    # Extract unique indices that have (index,1) as a key
+    indices = sorted(set(k[0] for k in xr_cons.keys() if k[1] == 1))
+    print(indices)
+    for idx in indices:
+        number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx)
+        intersected_optimization(number_of_lane, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters, z, u, RHO, distances_dict, xr_dict, idx)
+        
     print("Test finished")
 
-#test_dist_opt()
+test_dist_opt()

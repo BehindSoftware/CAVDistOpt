@@ -19,7 +19,7 @@ from report_lib import parse_col, parse_fuel, create_report
 from TCs import uncontrolled_case_TC1, sumocontrolled_case_TC1, sumocontrolled_case_TC1_row, uncontrolled_case_TC2, sumocontrolled_case_TC2, sumocontrolled_case_TC2_row, uncontrolled_case_TC3, sumocontrolled_case_TC3, sumocontrolled_case_TC3_row, uncontrolled_case_TC4, sumocontrolled_case_TC4, sumocontrolled_case_TC4_row, uncontrolled_case_TC5, sumocontrolled_case_TC5, sumocontrolled_case_TC5_row, uncontrolled_case_TC5_TL
 
 LOGGER_ACTIVE = False
-OPTIMIZATION_ACTIVE = False #For use optimization in the intersection
+OPTIMIZATION_ACTIVE = True #For use optimization in the intersection
 SUMO_ACTIVE = True
 MAPCREATION_ACTIVE = True #Creating the generation of map according to raw_intersection_num,column_intersection_num,edge_len,detector_pos
 MAPGENERATION_ACTIVE = True #Manhattan generation usage
