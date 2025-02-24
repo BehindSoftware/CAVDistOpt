@@ -16,7 +16,7 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
 
     if(number_of_vehicle==0):
         print("There is no vehicle")
-        pass
+        return
     else:
         #decision variables (scan each lane and define variable for having car)
         v = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0} #car_index is that car, car_index+1+1 one for next car one for range typo
@@ -138,6 +138,11 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
     return distance
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
+
+    v_vehicle = {}
+    x_vehicle = {}
+    xrcons_vehicle = {}
+    xpos_vehicle = {}
 
     if (idx, 1) in xr_cons and idx == number_of_lane: #Last lane
         v_vehicle = {
