@@ -39,12 +39,12 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
 
     # x constraints
     for (i, j), value in xr_cons.items():
-        if value != 0:
+        if value != 0 and i==car_index:
             constraints.append(x[i, 1] == 0.5 * a[i, 1] * t**2 + v_input[(i, 1)] * t + x_input[(i, 1)])
 
     # v constraints
     for (i, j), value in xr_cons.items():
-        if value != 0:
+        if value != 0 and i==car_index:
             constraints.append(v[i, 1] == a[i, 1] * t + v_input[(i, 1)])
 
     # Lane crossing constraints
@@ -77,16 +77,14 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
 
     # TO DO: I am not sure the other car should be limited
     # Velocity constraints: v should be between 0 and epsilon_prime
-    for i in range(car_index, car_index + number_of_vehicle):
-        if xr_cons[(i, 1)] != 0:
-            constraints.append(v[i, 1] >= 0)  # v >= 0 (nonnegative)
-            constraints.append(v[i, 1] <= epsilon_prime)  # v <= epsilon_prime
+    if xr_cons[(car_index, 1)] != 0:
+        constraints.append(v[car_index, 1] >= 0)  # v >= 0 (nonnegative)
+        constraints.append(v[car_index, 1] <= epsilon_prime)  # v <= epsilon_prime
 
     # Acceleration constraints: a should be between alfa and alfa_prime
-    for i in range(car_index, car_index + number_of_vehicle):
-        if xr_cons[(i, 1)] != 0:
-            constraints.append(a[i, 1] >= alfa)  # a >= alfa (minimum acceleration)
-            constraints.append(a[i, 1] <= alfa_prime)  # a <= alfa_prime (maximum acceleration)
+    if xr_cons[(car_index, 1)] != 0:
+        constraints.append(a[car_index, 1] >= alfa)  # a >= alfa (minimum acceleration)
+        constraints.append(a[car_index, 1] <= alfa_prime)  # a <= alfa_prime (maximum acceleration)
 
     #test
     # for i in range(0, len(constraints)):
@@ -96,7 +94,7 @@ def intersected_optimization(number_of_lane, number_of_vehicle, v_input, x_input
     objective = cp.Minimize(
     cp.sum([
         xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
-        for i in range(car_index, car_index + number_of_vehicle)
+        for i in range(car_index, car_index + 1)
         if xr_cons[(i, 1)] != 0
     ])
     )

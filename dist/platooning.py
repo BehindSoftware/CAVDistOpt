@@ -19,9 +19,9 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
         return
     else:
         #decision variables -> #platooning is started from the last car(car_index) to front car(car_index - 1), to take current car we need to put +1 to range (car_index + 1) 
-        v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index - 1, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
+        v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
         x = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index - 1, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
-        a = {(number_of_lane, j): cp.Variable() for j in range(car_index - 1, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
+        a = {(number_of_lane, j): cp.Variable() for j in range(car_index, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
 
     #constraints
     constraints = []
@@ -39,12 +39,12 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
 
     # x constraints
     for (number_of_lane, j), value in xr_cons.items():
-        if value != 0:
+        if value != 0 and j==car_index:
             constraints.append(x[number_of_lane, j] == 0.5 * a[number_of_lane, j] * t**2 + v_input[(number_of_lane, j)] * t + x_input[(number_of_lane, j)])
 
     # v constraints
     for (number_of_lane, j), value in xr_cons.items():
-        if value != 0:
+        if value != 0 and j==car_index:
             constraints.append(v[number_of_lane, j] == a[number_of_lane, j] * t + v_input[(number_of_lane, j)])
 
     # Safe distance constraints (we need to the first car values in here)
@@ -58,18 +58,15 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
                 constraints.append(x[number_of_lane, car_index] - x[number_of_lane, car_index - 1] >= lv + D + R * v[number_of_lane, car_index])
 
-    # TO DO: I am not sure the other car should be limited
     # Velocity constraints: v should be between 0 and epsilon_prime
-    for j in range(car_index - 1, car_index + 1):
-        if xr_cons[(number_of_lane, j)] != 0:
-            constraints.append(v[number_of_lane, j] >= 0)  # v >= 0 (nonnegative)
-            constraints.append(v[number_of_lane, j] <= epsilon_prime)  # v <= epsilon_prime
+    if xr_cons[(number_of_lane, car_index)] != 0:
+        constraints.append(v[number_of_lane, car_index] >= 0)  # v >= 0 (nonnegative)
+        constraints.append(v[number_of_lane, car_index] <= epsilon_prime)  # v <= epsilon_prime
 
     # Acceleration constraints: a should be between alfa and alfa_prime
-    for j in range(car_index - 1, car_index + 1):
-        if xr_cons[(number_of_lane, j)] != 0:
-            constraints.append(a[number_of_lane, j] >= alfa)  # a >= alfa (minimum acceleration)
-            constraints.append(a[number_of_lane, j] <= alfa_prime)  # a <= alfa_prime (maximum acceleration)
+    if xr_cons[(number_of_lane, car_index)] != 0:
+        constraints.append(a[number_of_lane, car_index] >= alfa)  # a >= alfa (minimum acceleration)
+        constraints.append(a[number_of_lane, car_index] <= alfa_prime)  # a <= alfa_prime (maximum acceleration)
 
     #test
     # for i in range(0, len(constraints)):
@@ -80,7 +77,7 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     objective = cp.Minimize(
     cp.sum([
         xr_cons[(number_of_lane, j)] - x[number_of_lane, j] + gamma * cp.abs(v[number_of_lane, j] - v_input[(number_of_lane, j)])
-        for j in range(car_index - 1, car_index + 1)
+        for j in range(car_index, car_index + 1)
         if xr_cons[(number_of_lane, j)] != 0
     ])
     )
