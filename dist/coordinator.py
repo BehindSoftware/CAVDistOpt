@@ -79,7 +79,7 @@ def admm_algorithm(intersected_information,platooning_information, map_to_lane, 
         # Step 1: Local optimization for intersected group (each vehicle)# Perform local optimization for intersected vehicles, we are sending whole intersected cars because they depent on each others.
         if number_of_vehicle_intersected != 0:
             x_intersected_local = intersected_optimization(
-                number_of_lane_intersected, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters_intersected, z[index], u[index], RHO, distances_dict, xr_dict
+                number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters_intersected, z[index], u[index], distances_dict, xr_dict
             )
 
             x_local_combined[index] = np.average(x_intersected_local)
@@ -138,11 +138,9 @@ def admm_algorithm(intersected_information,platooning_information, map_to_lane, 
                     v_lane, 
                     x_lane, 
                     xr_lane, 
-                    x_pos_lane, 
                     parameters_platooning, 
                     z[index], 
                     u[index], 
-                    RHO,
                     distances_dict,
                     xr_dict
                 )
@@ -246,7 +244,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             #TO DO: Adding one constraint for z; returning z,u and x_local values and also a value to map x_local values; change optimization for one car; optimization will be called for a thread
             #TO DO: x_local >= z + u xlocal = (Xl^t+1 - Fl)=zl (X^t+1 -Fm)=zm -> Clarify it
             x_intersected_local = intersected_optimization(
-                number_of_lane_intersected, number_of_vehicle_intersected, v_inter, x_inter, xr_inter, x_pos_inter, parameters_intersected, z_intersected[index], u_local_intersected[index], RHO, distances_dict, xr_dict
+                number_of_vehicle_intersected, v_inter, x_inter, xr_inter, x_pos_inter, parameters_intersected, z_intersected[index], u_local_intersected[index], distances_dict, xr_dict
             )
 
             x_local_combined[index] = np.average(x_intersected_local)
@@ -307,11 +305,9 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                     v_lane, 
                     x_lane, 
                     xr_lane, 
-                    x_pos_lane, 
                     parameters_platooning, 
                     z[index], 
                     u[index], 
-                    RHO,
                     distances_dict,
                     xr_dict
                 )

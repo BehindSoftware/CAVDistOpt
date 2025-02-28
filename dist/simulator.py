@@ -183,12 +183,12 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                 platooning_information.extend([number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning, parameters, platooning_list])
                 admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
                 #Call intersected.py to handle optimization according to l
-                # acceleration = intersected_optimization(number_of_lane, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters)
+                # acceleration = intersected_optimization(number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters)
                 #print(acceleration)
                 #set_optimized_acceleration(number_of_lane, number_of_vehicle, intersected_list, acceleration, step)
 
                 #Call platooning.py to handle optimization according to s
-                # acceleration = platooning_optimization(number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning, parameters)
+                # acceleration = platooning_optimization(number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, parameters)
                 #print(acceleration)
                 #set_optimized_acceleration(number_of_lane, number_of_vehicle, platooning_list, acceleration, step)
 

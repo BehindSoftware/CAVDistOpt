@@ -1,7 +1,19 @@
 import cvxpy as cp
 import numpy as np
 
-def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict, car_index):
+#number_of_lane to understand which lane's car
+#number_of_vehicle to understand there is car in the front
+#v_input for vehicle's current velocity (the car and front one)
+#x_input for vehicle's current distance travelled (the car and front one)
+#xr_cons for vehicle's destination (the car and front one)
+#parameters for optimization
+#z is consensus variable
+#u is dual update variable
+#distances_dict is X^t+1 value for intersected car
+#xr_dict is xr_cons value for intersected car
+#car_index is index for vehicle
+
+def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, parameters, z, u, distances_dict, xr_dict, car_index):
     #Constants
     t = parameters[0]                           #time scale: t is the measurement frequency, it can be 1 second for now.
     epsilon_prime = parameters[1] * 1000 / 3600 #km/h to m/s conversion for desired velocity
@@ -48,15 +60,16 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
             constraints.append(v[number_of_lane, j] == a[number_of_lane, j] * t + v_input[(number_of_lane, j)])
 
     # Safe distance constraints (we need to the first car values in here)
-    #TO DO: This should be checked because the position should be used in here!
     if number_of_vehicle > 0: #if we have 1 car, we need to check with intersected
         if car_index==2: #Means the car which need the first car information from intersected list
             if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
                 constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= lv + D + R * v[number_of_lane, j + 1]]
+                constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] > z + u]
                 #constraints.append(x[i, j] - x[i, j + 1] >= lv + D + R * v[i, j + 1]) Test it
         else: #other lane cars
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
-                constraints.append(x[number_of_lane, car_index] - x[number_of_lane, car_index - 1] >= lv + D + R * v[number_of_lane, car_index])
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] > z + u)
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(number_of_lane, car_index)] != 0:
@@ -98,17 +111,16 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
         print("Problem is infeasible.")
         #acceleration = {key: 0 for key in a} #Reset values
         #distance = {key: 0 for key in x} #Reset values
-        distance = [0] * (number_of_lane * number_of_vehicle) #Reset values
+        distance.append(0) #Reset values
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
         #acceleration = {key: 0 for key in a} #Reset values
         #distance = {key: 0 for key in x} #Reset values
-        distance = [0] * (number_of_lane * number_of_vehicle) #Reset values
+        distance.append(0) #Reset values
     else:
         print("Solution found.")
-        for j in range(car_index - 1, car_index + 1):
-            if (number_of_lane, j) in x and x[(number_of_lane, j)].value is not None:
-                distance.append(x[(number_of_lane, j)].value)
+        if (number_of_lane, car_index) in x and x[(number_of_lane, car_index)].value is not None:
+            distance.append(x[(number_of_lane, car_index)].value)
 
     print(f"Distance (as list): {distance}")
     #TO DO: fill distances_list as dict for each car distances
@@ -171,9 +183,9 @@ def test_dist_opt():
         for idx in indices:
             if idx!=1:
                 number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx)
-                platooning_optimization(number_of_lane, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters, z, u, RHO, distances_dict, xr_dict, idx)
+                platooning_optimization(number_of_lane, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters, z, u, distances_dict, xr_dict, idx)
 
-    #platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, RHO, distances_dict, xr_dict)
+    #platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, parameters, z, u, distances_dict, xr_dict)
     print("Test finished")
 
 test_dist_opt()
