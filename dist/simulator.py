@@ -9,7 +9,7 @@ else:
 from test import uncontrolled_case, test_case_four
 from dist.platooning import platooning_optimization
 from dist.intersected import intersected_optimization
-from dist.coordinator import admm_algorithm
+from dist.coordinator import admm_algorithm, consensus_admm_algorithm
 from TCs import uncontrolled_case_TC1, uncontrolled_case_TC2, uncontrolled_case_TC3, uncontrolled_case_TC4, uncontrolled_case_TC5
 
 map_to_lane = {}
@@ -181,7 +181,8 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
             else:
                 intersected_information.extend([number_of_lane, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters, intersected_list])
                 platooning_information.extend([number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning, parameters, platooning_list])
-                admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
+                #admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
+                consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
                 #Call intersected.py to handle optimization according to l
                 # acceleration = intersected_optimization(number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters)
                 #print(acceleration)

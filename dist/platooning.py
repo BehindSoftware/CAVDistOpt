@@ -64,12 +64,14 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
         if car_index==2: #Means the car which need the first car information from intersected list
             if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
                 constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= lv + D + R * v[number_of_lane, j + 1]]
-                constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] > z + u]
+                constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= z + u]
+                local_v = distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2]
                 #constraints.append(x[i, j] - x[i, j + 1] >= lv + D + R * v[i, j + 1]) Test it
         else: #other lane cars
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
-                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] > z + u)
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
+                local_v = x[number_of_lane, car_index - 1] - x[number_of_lane, car_index]
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(number_of_lane, car_index)] != 0:
@@ -125,7 +127,7 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     print(f"Distance (as list): {distance}")
     #TO DO: fill distances_list as dict for each car distances
 
-    return distance
+    return distance, local_v
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 
@@ -168,6 +170,7 @@ def test_dist_opt():
     x_pos = {(1, 1): 18.095449316874145, (2, 1): 492, (3, 1): 480, (3, 2): 475, (4, 1): 22.907944483775648, (1, 2): 5, (1, 3): 15, (1, 4): 25, (1, 5): 35, (2, 2): 0, (2, 3): 0, (2, 4): 0, (2, 5): 0, (3, 3): 0, (3, 4): 0, (3, 5): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0, (4, 5): 0}
     number_of_lane = 4
     number_of_vehicle = 5
+    #TO DO: z and u should be updated
     z = np.zeros((number_of_lane + 1, number_of_vehicle + 1))
     u = np.zeros((number_of_lane + 1, number_of_vehicle + 1))
     RHO = 1.0 
