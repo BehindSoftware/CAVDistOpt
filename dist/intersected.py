@@ -27,18 +27,21 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     lv = parameters[7]                          #Length of vehicle (m)
     F = 495
 
+    #constraints
+    constraints = []
+    local_v = 0
+    distance = []
+
     if(number_of_vehicle==0):
         print("There is no vehicle")
-        return
+        distance.append(0)
+        return distance[0], local_v
     else:
         #decision variables (scan each lane and define variable for having car) #can be filtered like platooning, we can define variables for just need of them
         v = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0} #car_index is that car, car_index+1+1 one for next car one for range typo
         x = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
         a = {(i, 1): cp.Variable() for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
-
-    #constraints
-    constraints = []
-
+    
     #test
 
     # print("v:",v)
@@ -71,19 +74,20 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
                 if(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2<0): #This checks for absolute between F and X^t+1
                     constraints.append((F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
                     constraints.append((F-x[car_index,1])>=(z+u))
-                    local_v = F-x[car_index,1]
+                    #TO DO: Think about this, how local_v can be calculated, x is not value
+                    #local_v = F-x[car_index,1]
                 elif(check_for_will_pass_inters>0 and check_for_will_pass_inters_lane2<0):
                     constraints.append((x[car_index,1]-F)+(F-x[car_index+1,1])>=(lv+D))
                     constraints.append((x[car_index,1]-F)>=(z+u))
-                    local_v = x[car_index,1]-F
+                    #local_v = x[car_index,1]-F
                 elif(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2>0):
                     constraints.append((F-x[car_index,1])+(x[car_index+1,1]-F)>=(lv+D))
                     constraints.append((F-x[car_index,1])>=(z+u))
-                    local_v = F-x[car_index,1]
+                    #local_v = F-x[car_index,1]
                 else:
                     constraints.append((x[car_index,1]-F)+(x[car_index+1,1]-F)>=(lv+D))
                     constraints.append((x[car_index,1]-F)>=(z+u))
-                    local_v = x[car_index,1]-F
+                    #local_v = x[car_index,1]-F
         elif(x_input[car_index,1]>F and x_input[car_index+1,1]<F):
             constraints.append ((2*F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
         elif(x_input[car_index,1]<F and x_input[car_index+1,1]>F):
@@ -129,7 +133,6 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
     # Convert results to a list
-    distance = []
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
@@ -152,7 +155,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     print(f"Distance (as list): {distance}")
     #TO DO: fill distances_list as dict for each car distances
 
-    return distance, local_v
+    return distance[0], local_v
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 
@@ -237,4 +240,4 @@ def test_dist_opt():
         
     print("Test finished")
 
-test_dist_opt()
+#test_dist_opt()

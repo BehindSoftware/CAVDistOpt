@@ -25,18 +25,22 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     lv = parameters[7]                          #Length of vehicle (m)
     F = 495
 
+    #constraints
+    constraints = []
+    local_v = 0
+    #TO DO: distance will be fixed, it is not list element
+    distance = []
+
     # TO DO: Test this if for return
     if(number_of_vehicle==0):
         print("There is no vehicle")
-        return
+        distance.append(0)
+        return distance[0], local_v
     else:
         #decision variables -> #platooning is started from the last car(car_index) to front car(car_index - 1), to take current car we need to put +1 to range (car_index + 1) 
         v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
         x = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index - 1, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
         a = {(number_of_lane, j): cp.Variable() for j in range(car_index, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
-
-    #constraints
-    constraints = []
 
     #test
 
@@ -65,12 +69,14 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
             if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
                 constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= lv + D + R * v[number_of_lane, j + 1]]
                 constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= z + u]
+                #TO DO: Think about this, how local_v can be calculated, x is not value
                 local_v = distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2]
                 #constraints.append(x[i, j] - x[i, j + 1] >= lv + D + R * v[i, j + 1]) Test it
         else: #other lane cars
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
+                #TO DO: Think about this, how local_v can be calculated, x is not value
                 local_v = x[number_of_lane, car_index - 1] - x[number_of_lane, car_index]
 
     # Velocity constraints: v should be between 0 and epsilon_prime
@@ -107,7 +113,7 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
     # Convert results to a list
-    distance = []
+
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
@@ -127,7 +133,7 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     print(f"Distance (as list): {distance}")
     #TO DO: fill distances_list as dict for each car distances
 
-    return distance, local_v
+    return distance[0], local_v
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 
@@ -191,4 +197,4 @@ def test_dist_opt():
     #platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, parameters, z, u, distances_dict, xr_dict)
     print("Test finished")
 
-test_dist_opt()
+#test_dist_opt()
