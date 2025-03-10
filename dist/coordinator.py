@@ -1,13 +1,13 @@
 import cvxpy as cp
 import numpy as np
 from dist.intersected import intersected_optimization, parsing_vehicle_data
-from dist.platooning import platooning_optimization
+from dist.platooning import platooning_optimization, parsing_vehicle_data_platooning
 from dist.simulator import *
 
 #(number_of_lane, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters)
 
 # Consensus ADMM parameters
-MAX_ITER = 1000
+MAX_ITER = 10
 RHO = 1.0
 TOLERANCE = 1e-4
 
@@ -222,17 +222,18 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
 
 #TO DO: 1,5 is not correct, we can not have car in lane 4, therefore it can be rearranged again from the beginning
 
-def update_consensus(z, u, x):
+def update_consensus(z, u, x, cars_in_lanes):
 
     z_updated = np.copy(z)
 
     for lane_number in range(0, 5):
         if lane_number==0: #for intersection
             for idx in range(1,5): #each lane in the intersection
-                if idx==1:
-                    z_updated[lane_number][idx] = x[lane_number][idx] + u[lane_number][idx] / RHO
-                else:
-                    z_updated[lane_number][idx] = max(x[lane_number][idx] + u[lane_number][idx] / RHO, z_updated[0][1])
+                if idx in cars_in_lanes and cars_in_lanes[idx] != -1:
+                    if idx==1:
+                        z_updated[lane_number][idx] = x[lane_number][idx] + u[lane_number][idx] / RHO
+                    else:
+                        z_updated[lane_number][idx] = max(x[lane_number][idx] + u[lane_number][idx] / RHO, z_updated[0][1])
         else: #for platooning
             for idx in range(1,len(z[lane_number])):
                 z_updated[lane_number][idx] = np.average(z_updated[lane_number])
@@ -304,10 +305,10 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
         for idx in range(1, number_of_vehicle_intersected + 1):
             #TO DO: Adding one constraint for z; returning z,u and x_local values and also a value to map x_local values; change optimization for one car; optimization will be called for a thread
             #TO DO: x_local >= z + u xlocal = (Xl^t+1 - Fl)=zl (X^t+1 -Fm)=zm -> Clarify it
-            number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data(number_of_lane_intersected, number_of_vehicle, v_inter, x_inter, xr_inter, x_pos_inter, idx)
+            number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes = parsing_vehicle_data(number_of_lane_intersected, number_of_vehicle, v_inter, x_inter, xr_inter, x_pos_inter, idx)
             result[lane_number][idx], x[lane_number][idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][idx], u[lane_number][idx], distances_dict, xr_dict, idx)
 
-            if result[lane_number][idx] == 0:
+            if result[lane_number][idx] == 0 and number_of_vehicle!=0:
                 print("ERROR: Infeasible")
             print(result[lane_number][idx], x[lane_number][idx])
         new_arr = x[:number_of_vehicle_intersected] #TO DO: rearrange the arrays with unnecessary zeros
@@ -320,15 +321,15 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
 
             # Perform optimization for all vehicles in the current lane
             for idx in reversed(range(2,len(xr_lane)+1)): #Starts from 2 for ignore the first car
-                number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data(lane_number, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
+                number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data_platooning(lane_number, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
                 result[lane_number][idx], x[lane_number][idx] = platooning_optimization(lane_number, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[lane_number][idx], u[lane_number][idx], distances_dict, xr_dict, idx)
             
-                if result[lane_number][idx] == 0:
+                if result[lane_number][idx] == 0 and number_of_vehicle!=0:
                     print("ERROR: Infeasible")
             print(result[lane_number][idx], x[lane_number][idx])
         # Step 3: Consensus step
 
-        z_new = update_consensus(z, u, x)
+        z_new = update_consensus(z, u, x, cars_in_lanes)
 
         # Step 4: Update dual variables
 

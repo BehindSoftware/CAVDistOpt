@@ -31,6 +31,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     constraints = []
     local_v = 0
     distance = []
+    local_v_flag = False
 
     if(number_of_vehicle==0):
         print("There is no vehicle")
@@ -76,18 +77,22 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
                     constraints.append((F-x[car_index,1])>=(z+u))
                     #TO DO: Think about this, how local_v can be calculated, x is not value
                     #local_v = F-x[car_index,1]
+                    local_v_flag = True
                 elif(check_for_will_pass_inters>0 and check_for_will_pass_inters_lane2<0):
                     constraints.append((x[car_index,1]-F)+(F-x[car_index+1,1])>=(lv+D))
                     constraints.append((x[car_index,1]-F)>=(z+u))
                     #local_v = x[car_index,1]-F
+                    local_v_flag = True
                 elif(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2>0):
                     constraints.append((F-x[car_index,1])+(x[car_index+1,1]-F)>=(lv+D))
                     constraints.append((F-x[car_index,1])>=(z+u))
                     #local_v = F-x[car_index,1]
+                    local_v_flag = True
                 else:
                     constraints.append((x[car_index,1]-F)+(x[car_index+1,1]-F)>=(lv+D))
                     constraints.append((x[car_index,1]-F)>=(z+u))
                     #local_v = x[car_index,1]-F
+                    local_v_flag = True
         elif(x_input[car_index,1]>F and x_input[car_index+1,1]<F):
             constraints.append ((2*F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
         elif(x_input[car_index,1]<F and x_input[car_index+1,1]>F):
@@ -155,6 +160,9 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     print(f"Distance (as list): {distance}")
     #TO DO: fill distances_list as dict for each car distances
 
+    if local_v_flag == True:
+        local_v = abs(F-x[(car_index, 1)].value)
+
     return distance[0], local_v
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
@@ -163,7 +171,9 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
     x_vehicle = {}
     xrcons_vehicle = {}
     xpos_vehicle = {}
+    cars_in_lanes = {}
 
+    cars_in_lanes[idx] = 0
     if (idx, 1) in xr_cons and idx == number_of_lane: #Last lane
         v_vehicle = {
             (idx,1): v_input[(idx, 1)],
@@ -211,10 +221,11 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
         }
         number_of_vehicle = 1
     else:               #If the car does not exist in that lane
+        cars_in_lanes[idx] = -1
         number_of_vehicle = 0
 
     print(v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle)
-    return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle
+    return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes
 
 def test_dist_opt():
     v_input = {(1, 1): 9.768100274959579, (2, 1): 1.8596483482979238, (3, 1): 11.0, (3, 2): 4.0, (4, 1): 11.77369166086428, (1, 2): 0, (1, 3): 0, (1, 4): 0, (1, 5): 0, (2, 2): 0, (2, 3): 0, (2, 4): 0, (2, 5): 0, (3, 3): 0, (3, 4): 0, (3, 5): 0, (4, 2): 0, (4, 3): 0, (4, 4): 0, (4, 5): 0}
