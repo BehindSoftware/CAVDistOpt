@@ -30,30 +30,18 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     #constraints
     constraints = []
     local_v = 0
-    distance = []
+    distance = 0
     local_v_flag = False
 
     if(number_of_vehicle==0):
         print("There is no vehicle")
-        distance.append(0)
-        return distance[0], local_v
+        return distance, local_v
     else:
         #decision variables (scan each lane and define variable for having car) #can be filtered like platooning, we can define variables for just need of them
         v = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0} #car_index is that car, car_index+1+1 one for next car one for range typo
         x = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
         a = {(i, 1): cp.Variable() for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
     
-    #test
-
-    # print("v:",v)
-    # print("x:",x)
-    # print("a:",a)
-
-    # print("v_input: ",v_input)
-    # print("x_input: ",x_input)
-    print("xr_cons: ",xr_cons)
-    # print("x_pos  : ",x_pos)
-
     # x constraints
     for (i, j), value in xr_cons.items():
         if value != 0 and i==car_index:
@@ -66,33 +54,23 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     # Lane crossing constraints
     if(number_of_vehicle==2):
-        #for i in range(car_index, car_index + 1): #+1 because just one constraint for two cars
-            #if xr_cons[(i, 1)] != 0 and xr_cons[(i+1, 1)] != 0:
         if(x_pos[car_index,1]<F and x_pos[car_index+1,1]<F): #Checks this is the first intersection for cars, if not m.F will be increased because of usage distance travelled X^t+1
             if x_pos[(car_index, 1)] >= F - epsilon_prime and x_pos[(car_index+1, 1)] >= F - epsilon_prime:
                 check_for_will_pass_inters = x_pos[car_index,1]+v_input[car_index,1]-F
                 check_for_will_pass_inters_lane2 = x_pos[car_index+1,1]+v_input[car_index+1,1]-7-F
+                local_v_flag = True
                 if(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2<0): #This checks for absolute between F and X^t+1
                     constraints.append((F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
                     constraints.append((F-x[car_index,1])>=(z+u))
-                    #TO DO: Think about this, how local_v can be calculated, x is not value
-                    #local_v = F-x[car_index,1]
-                    local_v_flag = True
                 elif(check_for_will_pass_inters>0 and check_for_will_pass_inters_lane2<0):
                     constraints.append((x[car_index,1]-F)+(F-x[car_index+1,1])>=(lv+D))
                     constraints.append((x[car_index,1]-F)>=(z+u))
-                    #local_v = x[car_index,1]-F
-                    local_v_flag = True
                 elif(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2>0):
                     constraints.append((F-x[car_index,1])+(x[car_index+1,1]-F)>=(lv+D))
                     constraints.append((F-x[car_index,1])>=(z+u))
-                    #local_v = F-x[car_index,1]
-                    local_v_flag = True
                 else:
                     constraints.append((x[car_index,1]-F)+(x[car_index+1,1]-F)>=(lv+D))
                     constraints.append((x[car_index,1]-F)>=(z+u))
-                    #local_v = x[car_index,1]-F
-                    local_v_flag = True
         elif(x_input[car_index,1]>F and x_input[car_index+1,1]<F):
             constraints.append ((2*F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
         elif(x_input[car_index,1]<F and x_input[car_index+1,1]>F):
@@ -104,7 +82,6 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
         else:
             pass
 
-    # DECISION: The other car should not be limited
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(car_index, 1)] != 0:
         constraints.append(v[car_index, 1] >= 0)  # v >= 0 (nonnegative)
@@ -137,33 +114,25 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
-    # Convert results to a list
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
-        #acceleration = {key: 0 for key in a} #Reset values
-        #distance = {key: 0 for key in x} #Reset values
-        distance.append(0) #Reset values
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
-        #acceleration = {key: 0 for key in a} #Reset values
-        #distance = {key: 0 for key in x} #Reset values
-        distance.append(0) #Reset values
     else:
         print("Solution found.")
         if (car_index, 1) in x and x[(car_index, 1)].value is not None:
-            distance.append(x[(car_index, 1)].value) #X_local output
+            distance=x[(car_index, 1)].value #X_local output
             distances_dict[(car_index, 1)] = x[(car_index, 1)].value #X value for platooning cars
             xr_dict[(car_index, 1)] = xr_cons[(car_index, 1)] #Xr value for platooning cars
 
-    print(f"Distance (as list): {distance}")
-    #TO DO: fill distances_list as dict for each car distances
+    #print("Distance: " + str(distance))
 
     if local_v_flag == True:
-        local_v = abs(F-x[(car_index, 1)].value)
+        local_v = abs(F-x[(car_index, 1)].value) #local_v is distance to intersection
 
-    return distance[0], local_v
+    return distance, local_v
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 
@@ -224,7 +193,6 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
         cars_in_lanes[idx] = -1
         number_of_vehicle = 0
 
-    print(v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle)
     return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes
 
 def test_dist_opt():

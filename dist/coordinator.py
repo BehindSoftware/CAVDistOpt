@@ -182,7 +182,7 @@ def prepare_data(intersected_list, lane_number, v_intersected, x_intersected, xr
     # Populate the vehicle-specific data structures
     for vehicle_id in enumerate(vehicles_in_inter):
         vehicle_index = map_to_vehicle_num[vehicle_id[1]]
-        lane_number = map_to_lane[vehicle_id[1]] #TO DO:test this!!!
+        lane_number = map_to_lane[vehicle_id[1]]
 
         # Fill vehicle-specific data dictionaries
         v_inter[(lane_number, vehicle_index)] = v_intersected.get((lane_number, vehicle_index), 0)
@@ -218,6 +218,8 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
         xr_lane[(lane_number, vehicle_index)] = xr_cons_platooning.get((lane_number, vehicle_index), 0)
         x_pos_lane[(lane_number, vehicle_index)] = x_pos_platooning.get((lane_number, vehicle_index), 0)
 
+    print("prepare_data_platooning")
+    print(v_lane, x_lane, xr_lane, x_pos_lane)
     return v_lane, x_lane, xr_lane, x_pos_lane
 
 #TO DO: 1,5 is not correct, we can not have car in lane 4, therefore it can be rearranged again from the beginning
@@ -290,29 +292,25 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
     xr_dict = {}
 
     for iteration in range(MAX_ITER):
-        # Temporary arrays to store local solutions
-        # x_intersected_local = np.zeros(number_of_vehicle_intersected)
-        # x_platooning_local = np.zeros(number_of_vehicle_platooning)
 
         # Store previous values of consensus variables for dual residual calculation
-        #TO DO: we should store average values for platooning 
         z_prev = np.copy(z)
-    
+
+        # Prepare data for intersected cars
         v_inter, x_inter, xr_inter, x_pos_inter = prepare_data(intersected_list, lane_number, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num)
 
-        #TO DO: Do we need to reset idx ? If not we need to hold idx after intersected list to not overwright the values in platooning 
-        # Step 1: Local optimization for intersected group (each vehicle)# Perform local optimization for intersected vehicles, we are sending whole intersected cars because they depent on each others.
+        print("Iteration:" + str(iteration) + "z:" + str(z))
+
+        # Step 1: Local optimization for intersected group
         for idx in range(1, number_of_vehicle_intersected + 1):
-            #TO DO: Adding one constraint for z; returning z,u and x_local values and also a value to map x_local values; change optimization for one car; optimization will be called for a thread
-            #TO DO: x_local >= z + u xlocal = (Xl^t+1 - Fl)=zl (X^t+1 -Fm)=zm -> Clarify it
+            
             number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes = parsing_vehicle_data(number_of_lane_intersected, number_of_vehicle, v_inter, x_inter, xr_inter, x_pos_inter, idx)
             result[lane_number][idx], x[lane_number][idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][idx], u[lane_number][idx], distances_dict, xr_dict, idx)
 
-            if result[lane_number][idx] == 0 and number_of_vehicle!=0:
-                print("ERROR: Infeasible")
-            print(result[lane_number][idx], x[lane_number][idx])
-        new_arr = x[:number_of_vehicle_intersected] #TO DO: rearrange the arrays with unnecessary zeros
-        lane_number =+ 1
+            print("Distance:" + str(result[lane_number][idx]) + "Local_v:" + str(x[lane_number][idx]))
+
+        #new_arr = x[:number_of_vehicle_intersected] #TO DO: rearrange the arrays with unnecessary zeros
+
         # Step 2: Local optimization for platooning group (each vehicle)
         
         for lane_number in range(1, number_of_lane_platooning + 1): #1,2,3,4
@@ -320,20 +318,22 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             v_lane, x_lane, xr_lane, x_pos_lane = prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num)
 
             # Perform optimization for all vehicles in the current lane
-            for idx in reversed(range(2,len(xr_lane)+1)): #Starts from 2 for ignore the first car
+            for idx in reversed(range(2,len(xr_lane)+1)): #Starts from 2 for ignore the first car TO DO: why we have +2 
                 number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data_platooning(lane_number, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
                 result[lane_number][idx], x[lane_number][idx] = platooning_optimization(lane_number, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[lane_number][idx], u[lane_number][idx], distances_dict, xr_dict, idx)
             
-                if result[lane_number][idx] == 0 and number_of_vehicle!=0:
-                    print("ERROR: Infeasible")
-            print(result[lane_number][idx], x[lane_number][idx])
+            print("Distance:" + str(result[lane_number][idx]) + "Local_v:" + str(x[lane_number][idx]))
         # Step 3: Consensus step
 
         z_new = update_consensus(z, u, x, cars_in_lanes)
 
+        print("z_new:" + str(z_new))
+
         # Step 4: Update dual variables
 
         u_new = update_dual(z, u, x)
+
+        print("u_new:" + str(u_new))
 
         # Step 5: Convergence check
 

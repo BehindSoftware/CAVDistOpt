@@ -28,15 +28,13 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     #constraints
     constraints = []
     local_v = 0
-    #TO DO: distance will be fixed, it is not list element
-    distance = []
+    distance = 0
     local_v_flag = False
 
     # TO DO: Test this if for return
     if(number_of_vehicle==0):
         print("There is no vehicle")
-        distance.append(0)
-        return distance[0], local_v
+        return distance, local_v
     else:
         #decision variables -> #platooning is started from the last car(car_index) to front car(car_index - 1), to take current car we need to put +1 to range (car_index + 1) 
         v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
@@ -122,26 +120,19 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
-        #acceleration = {key: 0 for key in a} #Reset values
-        #distance = {key: 0 for key in x} #Reset values
-        distance.append(0) #Reset values
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
-        #acceleration = {key: 0 for key in a} #Reset values
-        #distance = {key: 0 for key in x} #Reset values
-        distance.append(0) #Reset values
     else:
         print("Solution found.")
         if (number_of_lane, car_index) in x and x[(number_of_lane, car_index)].value is not None:
-            distance.append(x[(number_of_lane, car_index)].value)
+            distance=x[(number_of_lane, car_index)].value
 
-    print(f"Distance (as list): {distance}")
-    #TO DO: fill distances_list as dict for each car distances
+    #print("Distance: " + str(distance))
 
     if local_v_flag == True:
         local_v = v[(number_of_lane, car_index)].value
 
-    return distance[0], local_v
+    return distance, local_v
 
 def parsing_vehicle_data_platooning(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 
