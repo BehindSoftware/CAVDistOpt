@@ -193,6 +193,7 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
         cars_in_lanes[idx] = -1
         number_of_vehicle = 0
 
+    print("cars_in_lanes:" + str(cars_in_lanes))
     return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes
 
 def test_dist_opt():

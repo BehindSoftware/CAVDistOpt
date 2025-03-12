@@ -224,20 +224,23 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
 
 #TO DO: 1,5 is not correct, we can not have car in lane 4, therefore it can be rearranged again from the beginning
 
-def update_consensus(z, u, x, cars_in_lanes):
+def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
 
     z_updated = np.copy(z)
 
-    for lane_number in range(0, 5):
+    for lane_number in range(0, 5): # it is constant lane 0= intersection, lane 1,2,3,4 lanes
         if lane_number==0: #for intersection
-            for idx in range(1,5): #each lane in the intersection
+            first_flag = True
+            for idx in range(1,5): #each lane in the intersection lane 1,2,3,4
                 if idx in cars_in_lanes and cars_in_lanes[idx] != -1:
-                    if idx==1:
+                    if first_flag==True:
                         z_updated[lane_number][idx] = x[lane_number][idx] + u[lane_number][idx] / RHO
+                        first_flag = False
                     else:
                         z_updated[lane_number][idx] = max(x[lane_number][idx] + u[lane_number][idx] / RHO, z_updated[0][1])
         else: #for platooning
-            for idx in range(1,len(z[lane_number])):
+            for idx in range(1,length_of_lanes[lane_number]):
+                print("len(z[lane_number]):"+ str(length_of_lanes[lane_number]))
                 z_updated[lane_number][idx] = np.average(z_updated[lane_number])
     return z_updated
 
@@ -251,7 +254,7 @@ def update_dual(z, u, x):
 
     return u_updated
 
-def consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num):
+def consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num, length_of_lanes):
 
     # Unpack intersected information
     (
@@ -283,6 +286,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
     number_of_vehicle = 0
 
     #0 = intersected; 1,2,3,4 = platooning lanes
+    #TO DO: rearrange for length_of_lanes
     z = np.zeros((1+n_lanes, number_of_vehicle_intersected + number_of_vehicle_platooning))
     u = np.zeros((1+n_lanes, number_of_vehicle_intersected + number_of_vehicle_platooning))
     x = np.zeros((1+n_lanes, number_of_vehicle_intersected + number_of_vehicle_platooning))
@@ -302,8 +306,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
         print("Iteration:" + str(iteration) + "z:" + str(z))
 
         # Step 1: Local optimization for intersected group
-        for idx in range(1, number_of_vehicle_intersected + 1):
-            
+        for idx in range(1, 5): # should be check for 1,2,3,4 maybe there is car in lane 4
             number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes = parsing_vehicle_data(number_of_lane_intersected, number_of_vehicle, v_inter, x_inter, xr_inter, x_pos_inter, idx)
             result[lane_number][idx], x[lane_number][idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][idx], u[lane_number][idx], distances_dict, xr_dict, idx)
 
@@ -325,7 +328,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             print("Distance:" + str(result[lane_number][idx]) + "Local_v:" + str(x[lane_number][idx]))
         # Step 3: Consensus step
 
-        z_new = update_consensus(z, u, x, cars_in_lanes)
+        z_new = update_consensus(z, u, x, cars_in_lanes, length_of_lanes)
 
         print("z_new:" + str(z_new))
 

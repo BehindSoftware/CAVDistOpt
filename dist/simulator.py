@@ -95,6 +95,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         platooning_list = []
         intersected_information = []
         platooning_information = []
+        length_of_lanes = [0,0,0,0,0]
         number_of_vehicle_intersected = 0
         number_of_vehicle_platooning = 0
         number_of_lane = 0
@@ -159,6 +160,8 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                     else:
                         #print("The car on this lane is no more exist")
                         pass
+                length_of_lanes[0] = number_of_vehicle_intersected
+                length_of_lanes[lane_number] = number_of_vehicle_platooning
             else:
                 #print("There is no vehicle in this induction loop:",str(lane_number))
                 pass
@@ -182,7 +185,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                 intersected_information.extend([number_of_lane, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters, intersected_list])
                 platooning_information.extend([number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning, parameters, platooning_list])
                 #admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
-                consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
+                consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num, length_of_lanes)
                 #Call intersected.py to handle optimization according to l
                 # acceleration = intersected_optimization(number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters)
                 #print(acceleration)
@@ -215,6 +218,8 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
 
         detected_list = []
         number_of_vehicle = 0
+        number_of_vehicle_intersected = 0
+        number_of_vehicle_platooning = 0
         vehicle_list_in_scenario = traci.vehicle.getIDList()
         number_of_lane = 0
     pass
