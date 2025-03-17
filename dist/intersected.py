@@ -52,7 +52,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
         if value != 0 and i==car_index:
             constraints.append(v[i, 1] == a[i, 1] * t + v_input[(i, 1)])
 
-    # Lane crossing constraints
+    # Lane crossing constraints (SHORT INFORMATION: There is no neighbor input data, just variable for safety)
     if(number_of_vehicle==2):
         if(x_pos[car_index,1]<F and x_pos[car_index+1,1]<F): #Checks this is the first intersection for cars, if not m.F will be increased because of usage distance travelled X^t+1
             if x_pos[(car_index, 1)] >= F - epsilon_prime and x_pos[(car_index+1, 1)] >= F - epsilon_prime:
@@ -140,6 +140,7 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
     x_vehicle = {}
     xrcons_vehicle = {}
     xpos_vehicle = {}
+    #cars_in_lanes holds whether there is car in that lane cars_in_lanes[1:4]
     cars_in_lanes = {}
 
     cars_in_lanes[idx] = 0
