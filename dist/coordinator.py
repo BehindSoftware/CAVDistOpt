@@ -200,9 +200,9 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             #parsing_vehicle_data to take current car data
             number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes = parsing_vehicle_data(number_of_lane_intersected, number_of_vehicle, v_inter, x_inter, xr_inter, x_pos_inter, idx)
             #send to optimization idx from 1 to 4 however consensus variables start from 0 to n-1
-            result[lane_number][idx-1], x[lane_number][idx-1] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][idx-1], u[lane_number][idx-1], distances_dict, xr_dict, idx)
-
-            print("Distance:" + str(result[lane_number][idx-1]) + "Local_v:" + str(x[lane_number][idx-1]))
+            if cars_in_lanes[idx] != -1:
+                result[lane_number][idx-1], x[lane_number][idx-1] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][idx-1], u[lane_number][idx-1], distances_dict, xr_dict, idx)
+                print("Distance:" + str(result[lane_number][idx-1]) + "Local_v:" + str(x[lane_number][idx-1]))
 
         # Step 2: Local optimization for platooning group (each vehicle)
         
@@ -214,10 +214,11 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             for idx in reversed(range(2,len(xr_lane)+1)): #Starts from 2 for ignore the first car
                 #parsing_vehicle_data to take current car data
                 number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data_platooning(lane_number, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
-                #send to optimization idx from 1 to 4 however consensus variables start from 0 to n-1
-                result[lane_number][idx-1], x[lane_number][idx-1] = platooning_optimization(lane_number, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[lane_number][idx-1], u[lane_number][idx-1], distances_dict, xr_dict, idx)
-            
-            print("Distance:" + str(result[lane_number][idx-1]) + "Local_v:" + str(x[lane_number][idx-1]))
+                
+                if number_of_vehicle!=0:
+                    #send to optimization idx from 1 to 4 however consensus variables start from 0 to n-1
+                    result[lane_number][idx-1], x[lane_number][idx-1] = platooning_optimization(lane_number, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[lane_number][idx-1], u[lane_number][idx-1], distances_dict, xr_dict, idx)
+                    print("Distance:" + str(result[lane_number][idx-1]) + "Local_v:" + str(x[lane_number][idx-1]))
         # Step 3: Consensus step
 
         z = update_consensus(z, u, x, cars_in_lanes, length_of_lanes)

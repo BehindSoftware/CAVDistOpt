@@ -65,14 +65,16 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     # Safe distance constraints (we need to the first car values in here)
     if number_of_vehicle > 0: #if we have 1 car, we need to check with intersected
         if car_index==2: #Means the car which need the first car information from intersected list
-            if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
-                constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= lv + D + R * v[number_of_lane, j + 1]]
-                constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= z + u]
-                #TO DO: Think about this, how local_v can be calculated, x is not value
-                #local_v = distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2]
-                constraints.append(v[number_of_lane, car_index]>=(z+u))
-                local_v_flag = True
-                #constraints.append(x[i, j] - x[i, j + 1] >= lv + D + R * v[i, j + 1]) Test it
+            #TO DO: check here
+            if (number_of_lane, 1) in xr_dict and (number_of_lane, 2) in xr_cons:
+                if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
+                    constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= lv + D + R * v[number_of_lane, j + 1]]
+                    constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= z + u]
+                    #TO DO: Think about this, how local_v can be calculated, x is not value
+                    #local_v = distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2]
+                    constraints.append(v[number_of_lane, car_index]>=(z+u))
+                    local_v_flag = True
+                    #constraints.append(x[i, j] - x[i, j + 1] >= lv + D + R * v[i, j + 1]) Test it
         else: #other lane cars
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
