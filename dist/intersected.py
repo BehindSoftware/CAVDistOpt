@@ -118,8 +118,10 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
+        return distance, local_v
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
+        return distance, local_v
     else:
         print("Solution found.")
         if (car_index, 1) in x and x[(car_index, 1)].value is not None:
@@ -194,7 +196,7 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
         cars_in_lanes[idx] = -1
         number_of_vehicle = 0
 
-    print("cars_in_lanes:" + str(cars_in_lanes))
+    print("cars_in_lanes:" + str(cars_in_lanes) + "number_of_vehicle:" + str(number_of_vehicle))
     return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes
 
 def test_dist_opt():

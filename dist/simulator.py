@@ -120,6 +120,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         print("Intersection Number:{}".format(intersection_number))
         #each lane of an intersection
         for lane_number in range(1,5): #Lane 1,2,3,4 clockwise (***Lane designed as constant 4***)
+            number_of_vehicle_platooning = 0
             vehicle_index = 1 #Should be reset for each lane
             detector_cars = [item[0] for item in traci.inductionloop.getVehicleData(str(lane_number+(intersection_number*4)))]
             detector_cars = get_sorted_vehicle_positions(detector_cars, vehicle_list_in_scenario)
@@ -151,24 +152,28 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                                 x_platooning[lane_number,vehicle_index] = traci.vehicle.getDistance(vehicle_on_lane) #odyometer for traveled distance
                                 xr_cons_platooning[lane_number,vehicle_index] = calculate_desired_route(vehicle_on_lane) #Take Xr
                                 x_pos_platoning[lane_number,vehicle_index] = traci.vehicle.getLanePosition(vehicle_on_lane)
-                                number_of_vehicle_platooning+= 1 
+                                number_of_vehicle_platooning+= 1
+                            number_of_vehicle+= 1 
                         map_to_lane[vehicle_on_lane] = lane_number #Assign lane number to use at set_optimized_acceleration
                         map_to_vehicle_num[vehicle_on_lane] = vehicle_index
                         #number_of_lane = lane_number #last lane ID which has a car (comment out because it is using as a constant)
                         vehicle_index+= 1 #vehicle ID in the same lane
-                        number_of_vehicle+= 1
+                        #number_of_vehicle+= 1
                     else:
                         #print("The car on this lane is no more exist")
                         pass
-                length_of_lanes[0] = number_of_vehicle_intersected
-                length_of_lanes[lane_number] = number_of_vehicle_platooning
             else:
                 #print("There is no vehicle in this induction loop:",str(lane_number))
                 pass
+            length_of_lanes[0] = number_of_vehicle_intersected
+            length_of_lanes[lane_number] = number_of_vehicle_platooning
 
         number_of_lane = 4 #TO DO: Assumed there is 4 lanes for each intersections
-        print("lane:{} vehicle:{}".format(number_of_lane,number_of_vehicle))
-        print("intersection:{} vehicle_list:{}".format(intersection_number,detected_list))
+        #print("lane:{} vehicle:{}".format(number_of_lane,number_of_vehicle))
+        #print("intersection:{} vehicle_list:{}".format(intersection_number,detected_list))
+        print("*Summarize* intersection:{}, total_vehicle_number:{}".format(intersection_number,number_of_vehicle))
+        for lane in range(0,5):
+            print("lane:{}length_of_lanes:{}".format(lane,length_of_lanes[lane]))
 
         #Calling Optimization Step
         if(DIST_OPT==False):

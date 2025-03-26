@@ -102,15 +102,17 @@ def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
     for lane_number in range(0, 5): # it is constant lane 0= intersection, lane 1,2,3,4 lanes
         if lane_number==0: #for intersection
             first_flag = True
+            consensus_idx = 0 #For intersection index 0 z[0], u[0], x[0]
             for idx in range(1,5): #each lane in the intersection lane 1,2,3,4
                 if idx in cars_in_lanes and cars_in_lanes[idx] != -1:
                     if first_flag==True:
-                        z_updated[lane_number][idx-1] = x[lane_number][idx-1] + u[lane_number][idx-1] / RHO
+                        z_updated[lane_number][consensus_idx] = x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO
                         first_flag = False
-                        pre_idx = idx
+                        pre_idx = consensus_idx
                     else:
-                        z_updated[lane_number][idx-1] = max(x[lane_number][idx-1] + u[lane_number][idx-1] / RHO, z_updated[lane_number][pre_idx-1])
-                        pre_idx = idx
+                        z_updated[lane_number][consensus_idx] = max(x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO, z_updated[lane_number][pre_idx])
+                        pre_idx = consensus_idx
+                    consensus_idx+=1
         else: #for platooning
             if(WEIGHTED_AVERAGE_CONSENSUS_ACTIVE==True):
                 #TO DO: NOT IMPLEMENTED need Weights and think structure
@@ -195,14 +197,16 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
         v_inter, x_inter, xr_inter, x_pos_inter = prepare_data(intersected_list, lane_number, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num)
 
         # Step 1: Local optimization for intersected group
-
+        consensus_idx = 0
         for idx in range(1, n_lanes+1): # should be check for 1,2,3,4 maybe there is car in lane 4
             #parsing_vehicle_data to take current car data
             number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes = parsing_vehicle_data(number_of_lane_intersected, number_of_vehicle, v_inter, x_inter, xr_inter, x_pos_inter, idx)
             #send to optimization idx from 1 to 4 however consensus variables start from 0 to n-1
             if cars_in_lanes[idx] != -1:
-                result[lane_number][idx-1], x[lane_number][idx-1] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][idx-1], u[lane_number][idx-1], distances_dict, xr_dict, idx)
-                print("Distance:" + str(result[lane_number][idx-1]) + "Local_v:" + str(x[lane_number][idx-1]))
+                print(str(idx)+str(result)+str(x)+ str(consensus_idx))
+                result[lane_number][consensus_idx], x[lane_number][consensus_idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[lane_number][consensus_idx], u[lane_number][consensus_idx], distances_dict, xr_dict, idx)
+                print("Distance:" + str(result[lane_number][consensus_idx]) + "Local_v:" + str(x[lane_number][consensus_idx]))
+                consensus_idx+=1
 
         # Step 2: Local optimization for platooning group (each vehicle)
         
