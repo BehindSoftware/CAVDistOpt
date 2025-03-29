@@ -117,7 +117,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
 
     #Gathering information step 
     for intersection_number in range(0,(induction_loop_number)): #induction_loop_number(intersection_num) comes from map creation
-        print("Intersection Number:{}".format(intersection_number))
+        #print("Intersection Number:{}".format(intersection_number))
         #each lane of an intersection
         for lane_number in range(1,5): #Lane 1,2,3,4 clockwise (***Lane designed as constant 4***)
             number_of_vehicle_platooning = 0
@@ -128,7 +128,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                 print("Sorted detector cars:",detector_cars) 
                 for vehicle_on_lane in detector_cars: #For each car in the same lane
                     if vehicle_on_lane in vehicle_list_in_scenario: #The car is still in the simulation
-                        print("Vehicle on lane {}:".format(lane_number) + vehicle_on_lane)
+                        #print("Vehicle on lane {}:".format(lane_number) + vehicle_on_lane)
                         detected_list.append(vehicle_on_lane) #For holding vehicle number
                         traci.vehicle.setSpeedMode(vehicle_on_lane,32) #Take control about speed (not sure 0 or 32 but not 31)
                         traci.vehicle.setLaneChangeMode(vehicle_on_lane, 0) #Take control about lanechange
@@ -171,7 +171,8 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         number_of_lane = 4 #TO DO: Assumed there is 4 lanes for each intersections
         #print("lane:{} vehicle:{}".format(number_of_lane,number_of_vehicle))
         #print("intersection:{} vehicle_list:{}".format(intersection_number,detected_list))
-        print("*Summarize* intersection:{}, total_vehicle_number:{}".format(intersection_number,number_of_vehicle))
+        if(number_of_vehicle!=0):
+            print("*Summarize* intersection:{}, total_vehicle_number:{}".format(intersection_number,number_of_vehicle))
         for lane in range(0,5):
             print("lane:{}length_of_lanes:{}".format(lane,length_of_lanes[lane]))
 

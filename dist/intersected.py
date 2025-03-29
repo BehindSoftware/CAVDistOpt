@@ -29,19 +29,22 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     #constraints
     constraints = []
-    local_v = 0
-    distance = 0
+    local_v = -1
+    distance = -1
     local_v_flag = False
+    #car_index means laneID
+    distances_dict[(car_index, 1)] = 0
+    xr_dict[(car_index, 1)] = 0
 
     if(number_of_vehicle==0):
-        print("There is no vehicle")
+        print("There is no vehicle in the intersection")
         return distance, local_v
     else:
         #decision variables (scan each lane and define variable for having car) #can be filtered like platooning, we can define variables for just need of them
         v = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0} #car_index is that car, car_index+1+1 one for next car one for range typo
         x = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
         a = {(i, 1): cp.Variable() for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0}
-    
+
     # x constraints
     for (i, j), value in xr_cons.items():
         if value != 0 and i==car_index:
@@ -52,10 +55,11 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
         if value != 0 and i==car_index:
             constraints.append(v[i, 1] == a[i, 1] * t + v_input[(i, 1)])
 
+    #TO DO: Just think the case for 1 and 4 lanes, it is not in neighbor but it effects to intersection
     # Lane crossing constraints (SHORT INFORMATION: There is no neighbor input data, just variable for safety)
     if(number_of_vehicle==2):
         if(x_pos[car_index,1]<F and x_pos[car_index+1,1]<F): #Checks this is the first intersection for cars, if not m.F will be increased because of usage distance travelled X^t+1
-            if x_pos[(car_index, 1)] >= F - epsilon_prime and x_pos[(car_index+1, 1)] >= F - epsilon_prime:
+            if x_pos[(car_index, 1)] >= F - epsilon_prime and x_pos[(car_index+1, 1)] >= F - epsilon_prime: # Is it enough close to the intersection, epsilon is arbitrary
                 check_for_will_pass_inters = x_pos[car_index,1]+v_input[car_index,1]-F
                 check_for_will_pass_inters_lane2 = x_pos[car_index+1,1]+v_input[car_index+1,1]-7-F
                 local_v_flag = True
@@ -145,8 +149,8 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
     #cars_in_lanes holds whether there is car in that lane cars_in_lanes[1:4]
     cars_in_lanes = {}
 
-    cars_in_lanes[idx] = 0
-    if (idx, 1) in xr_cons and idx == number_of_lane: #Last lane
+    cars_in_lanes[idx] = 0 #default assume there is car in idx=laneID
+    if (idx, 1) in xr_cons and idx == number_of_lane: #Last lane if idx == number_of_lane
         v_vehicle = {
             (idx,1): v_input[(idx, 1)],
         }
@@ -196,7 +200,7 @@ def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr
         cars_in_lanes[idx] = -1
         number_of_vehicle = 0
 
-    print("cars_in_lanes:" + str(cars_in_lanes) + "number_of_vehicle:" + str(number_of_vehicle))
+    print("parsing_vehicle_data:cars_in_lanes:" + str(cars_in_lanes) + "number_of_vehicle:" + str(number_of_vehicle))
     return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, cars_in_lanes
 
 def test_dist_opt():

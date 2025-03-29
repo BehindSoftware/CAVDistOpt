@@ -27,14 +27,18 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
 
     #constraints
     constraints = []
-    local_v = 0
-    distance = 0
+    local_v = -1
+    distance = -1
     local_v_flag = False
 
-    # TO DO: Test this if for return
+    #number_of_lane = laneID
     if(number_of_vehicle==0):
         print("There is no vehicle")
         return distance, local_v
+    elif(number_of_vehicle==1):
+        v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
+        x = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
+        a = {(number_of_lane, j): cp.Variable() for j in range(car_index, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
     else:
         #decision variables -> #platooning is started from the last car(car_index) to front car(car_index - 1), to take current car we need to put +1 to range (car_index + 1) 
         v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
@@ -62,30 +66,30 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
         if value != 0 and j==car_index:
             constraints.append(v[number_of_lane, j] == a[number_of_lane, j] * t + v_input[(number_of_lane, j)])
 
-    #TO DO: u is not created with correctly 
-    # Safe distance constraints (we need to the first car values in here)
-    # if number_of_vehicle > 0: #if we have 1 car, we need to check with intersected
-    #     if car_index==2: #Means the car which need the first car information from intersected list
-    #         #TO DO: check here
-    #         if (number_of_lane,1) in xr_dict and xr_dict[(number_of_lane, 1)] is not None: #Check for whether there is front car in the intersection
-    #             if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
-    #         #if (number_of_lane, 1) in xr_dict and (number_of_lane, 2) in xr_cons:
-    #             #if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 2)] != 0:
-    #                 constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= lv + D + R * v[number_of_lane, j + 1]]
-    #                 constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2] >= z + u]
-    #                 #TO DO: Think about this, how local_v can be calculated, x is not value
-    #                 #local_v = distances_dict[(number_of_lane, 1)] - x[number_of_lane, 2]
-    #                 constraints.append(v[number_of_lane, car_index]>=(z+u))
-    #                 local_v_flag = True
-    #                 #constraints.append(x[i, j] - x[i, j + 1] >= lv + D + R * v[i, j + 1]) Test it
-    #     else: #other lane cars
-    #         if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
-    #             constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
-    #             constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
-    #             #TO DO: Think about this, how local_v can be calculated, x is not value
-    #             #local_v = x[number_of_lane, car_index - 1] - x[number_of_lane, car_index]
-    #             constraints.append(v[number_of_lane, car_index]>=(z+u))
-    #             local_v_flag = True
+    #TO DO: check z+u constraint is correct
+    #Safe distance constraints (we need to the first car values in here)
+    if number_of_vehicle > 1: #if we have 1 car, we need to check with intersected
+        if car_index==1: #Means the car which need the first car information from intersected list
+            if (number_of_lane,1) in xr_dict and xr_dict[(number_of_lane, 1)] is not None and (number_of_lane, 1) in xr_cons: #Check for whether there is front car in the intersection
+                if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 1)] != 0:
+                    constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 1] >= lv + D + R * v[number_of_lane, 1]]
+                    #constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 1] >= z + u]
+                    constraints.append(v[number_of_lane, car_index]>=(z+u))
+                    local_v_flag = True
+                else:
+                    pass
+                    #Infeasible solution
+            else: #The intersected cars in platooning list
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
+                constraints.append(v[number_of_lane, car_index]>=(z+u))
+                local_v_flag = True
+        else: #other lane cars
+            if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
+                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
+                constraints.append(v[number_of_lane, car_index]>=(z+u))
+                local_v_flag = True
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(number_of_lane, car_index)] != 0:
@@ -114,18 +118,6 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     #test
     print(f"Objective function: {objective}")
 
-    print(f"xr_dict: {xr_dict}")
-    print(f"xr_cons: {xr_cons}")
-    print(f"distances_dict: {distances_dict}")
-    print(f"x: {x}")
-    print(f"v: {v}")
-    print(f"z: {z}, u: {u}")
-
-    # Check for NaN values
-    print(f"NaN in xr_dict: {any(np.isnan(list(xr_dict.values())))}")
-    print(f"NaN in xr_cons: {any(np.isnan(list(xr_cons.values())))}")
-    print(f"NaN in distances_dict: {any(np.isnan(list(distances_dict.values())))}")
-
     # Problem
     problem = cp.Problem(objective, constraints)
     problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)
@@ -137,14 +129,14 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
+        return distance, local_v
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
+        return distance, local_v
     else:
         print("Solution found.")
         if (number_of_lane, car_index) in x and x[(number_of_lane, car_index)].value is not None:
             distance=x[(number_of_lane, car_index)].value
-
-    #print("Distance: " + str(distance))
 
     if local_v_flag == True:
         local_v = v[(number_of_lane, car_index)].value
@@ -157,10 +149,23 @@ def parsing_vehicle_data_platooning(number_of_lane, number_of_vehicle, v_input, 
     x_vehicle = {}
     xrcons_vehicle = {}
     xpos_vehicle = {}
+    print("parsing_vehicle_data_platooning for:")
     print(number_of_lane, idx)
 
     if (number_of_lane, idx) in xr_cons and idx == 1: #First car
-        number_of_vehicle = 0 #skip first car
+        v_vehicle = {
+            (number_of_lane,idx): v_input[(number_of_lane, idx)]
+        }
+        x_vehicle = {
+            (number_of_lane,idx): x_input.get((number_of_lane,idx), None)
+        }
+        xrcons_vehicle = {
+            (number_of_lane,idx): xr_cons.get((number_of_lane,idx), None)
+        }
+        xpos_vehicle = {
+            (number_of_lane,idx): x_pos.get((number_of_lane,idx), None)
+        }
+        number_of_vehicle = 1
     elif (number_of_lane, idx) in xr_cons and (number_of_lane, idx - 1) in xr_cons: #If there is car in front 
         v_vehicle = {
             (number_of_lane,idx): v_input[(number_of_lane, idx)],
@@ -182,6 +187,7 @@ def parsing_vehicle_data_platooning(number_of_lane, number_of_vehicle, v_input, 
     else:               #If the car does not exist in that lane
         number_of_vehicle = 0
 
+    print("parsing_vehicle_data_platooning:" )
     print(v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle)
     return number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle
 
