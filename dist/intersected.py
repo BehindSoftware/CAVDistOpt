@@ -31,6 +31,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     constraints = []
     local_v = -1
     distance = -1
+    result = 0 #Not correct way as 0 acceleration
     local_v_flag = False
     #car_index means laneID
     distances_dict[(car_index, 1)] = 0
@@ -38,7 +39,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     if(number_of_vehicle==0):
         print("There is no vehicle in the intersection")
-        return distance, local_v
+        return result, local_v
     else:
         #decision variables (scan each lane and define variable for having car) #can be filtered like platooning, we can define variables for just need of them
         v = {(i, 1): cp.Variable(nonneg=True) for i in range(car_index, car_index + number_of_vehicle) if xr_cons[(i, 1)] != 0} #car_index is that car, car_index+1+1 one for next car one for range typo
@@ -122,14 +123,15 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
-        return distance, local_v
+        return result, local_v
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
-        return distance, local_v
+        return result, local_v
     else:
         print("Solution found.")
         if (car_index, 1) in x and x[(car_index, 1)].value is not None:
             distance=x[(car_index, 1)].value #X_local output
+            result=a[(car_index, 1)].value
             distances_dict[(car_index, 1)] = x[(car_index, 1)].value #X value for platooning cars
             xr_dict[(car_index, 1)] = xr_cons[(car_index, 1)] #Xr value for platooning cars
 
@@ -138,7 +140,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     if local_v_flag == True:
         local_v = abs(F-x[(car_index, 1)].value) #local_v is distance to intersection
 
-    return distance, local_v
+    return result, local_v
 
 def parsing_vehicle_data(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 

@@ -29,12 +29,13 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     constraints = []
     local_v = -1
     distance = -1
+    result = 0 #Not correct way as 0 acceleration
     local_v_flag = False
 
     #number_of_lane = laneID
     if(number_of_vehicle==0):
         print("There is no vehicle")
-        return distance, local_v
+        return result, local_v
     elif(number_of_vehicle==1):
         v = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1) if xr_cons[(number_of_lane, j)] != 0} 
         x = {(number_of_lane, j): cp.Variable(nonneg=True) for j in range(car_index, car_index + 1)  if xr_cons[(number_of_lane, j)] != 0}
@@ -129,19 +130,20 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")
-        return distance, local_v
+        return result, local_v
     elif problem.status == cp.UNBOUNDED:
         print("Problem is unbounded.")
-        return distance, local_v
+        return result, local_v
     else:
         print("Solution found.")
         if (number_of_lane, car_index) in x and x[(number_of_lane, car_index)].value is not None:
             distance=x[(number_of_lane, car_index)].value
+            result=a[(number_of_lane, car_index)].value
 
     if local_v_flag == True:
         local_v = v[(number_of_lane, car_index)].value
 
-    return distance, local_v
+    return result, local_v
 
 def parsing_vehicle_data_platooning(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, x_pos, idx):
 

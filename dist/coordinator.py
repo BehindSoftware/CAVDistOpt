@@ -213,7 +213,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                 if cars_in_lanes[laneID] != -1:
                     print("First car of LaneID:"+str(laneID)+ " Consensus_index:"+ str(consensus_idx))
                     result[0][consensus_idx], x[0][consensus_idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[0][consensus_idx], u[0][consensus_idx], distances_dict, xr_dict, laneID) #Intersected is hold in 0 index
-                    print("Distance:" + str(result[0][consensus_idx]) + "Local_v:" + str(x[0][consensus_idx]))
+                    print("Accelaration:" + str(result[0][consensus_idx]) + "Local_v:" + str(x[0][consensus_idx]))
                     consensus_idx+=1
 
         # Step 2: Local optimization for platooning group (each vehicle)
@@ -230,7 +230,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                     #parsing_vehicle_data to take current car data
                     number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data_platooning(laneID, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
                     result[laneID][consensus_idx], x[laneID][consensus_idx] = platooning_optimization(laneID, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[laneID][consensus_idx], u[laneID][consensus_idx], distances_dict, xr_dict, idx)
-                    print("Distance:" + str(result[laneID][consensus_idx]) + "Local_v:" + str(x[laneID][consensus_idx]))
+                    print("Accelaration:" + str(result[laneID][consensus_idx]) + "Local_v:" + str(x[laneID][consensus_idx]))
                     consensus_idx-=1
         # Step 3: Consensus step
 
