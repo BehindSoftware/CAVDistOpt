@@ -1,0 +1,25 @@
+<routes>
+    <vType id="test" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="300" jmTimegapMinor="0" jmIgnoreJunctionFoeProb="1" jmCrossingGap="0" sigma="1" guiShape="passenger/van" length="4" maxSpeed="50" accel="2.6" decel="4.5"/>
+    <vehicle id="1101" depart="1.00" color="0,0,1" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="1102" depart="1.00" color="0,0,1" type="test"><route edges="102 4"/>
+    </vehicle>
+    <vehicle id="1103" depart="1.00" color="1,0,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="1104" depart="1.00" color="1,0,0" type="test"><route edges="104 2"/>
+    </vehicle>
+    <vehicle id="1106" depart="3.00" color="1,0,0" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="1108" depart="3.00" color="0,1,0" type="test"><route edges="103 1"/>
+    </vehicle>
+    <vehicle id="1109" depart="3.00" color="0,1,0" type="test"><route edges="104 2"/>
+    </vehicle>
+    <vehicle id="1111" depart="5.00" color="0,1,0" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="1114" depart="5.00" color="0,0,1" type="test"><route edges="104 2"/>
+    </vehicle>
+    <vehicle id="1116" depart="7.00" color="0,0,1" type="test"><route edges="101 3"/>
+    </vehicle>
+    <vehicle id="1118" depart="7.00" color="0,0,1" type="test"><route edges="103 1"/>
+    </vehicle>
+</routes>

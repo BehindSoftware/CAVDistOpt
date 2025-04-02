@@ -17,6 +17,7 @@ from map_lib import create_map, add_manual_vehicle, case_1, case_1_twosec
 from manhattan_lib import network_file_creation
 from report_lib import parse_col, parse_fuel, create_report
 from TCs import uncontrolled_case_TC1, sumocontrolled_case_TC1, sumocontrolled_case_TC1_row, uncontrolled_case_TC2, sumocontrolled_case_TC2, sumocontrolled_case_TC2_row, uncontrolled_case_TC3, sumocontrolled_case_TC3, sumocontrolled_case_TC3_row, uncontrolled_case_TC4, sumocontrolled_case_TC4, sumocontrolled_case_TC4_row, uncontrolled_case_TC5, sumocontrolled_case_TC5, sumocontrolled_case_TC5_row, uncontrolled_case_TC5_TL
+from TCs_dist import uncontrolled_case_TC1_dist, sumocontrolled_case_TC1_dist, sumocontrolled_case_TC1_row_dist
 
 LOGGER_ACTIVE = False
 OPTIMIZATION_ACTIVE = True #For use optimization in the intersection
@@ -25,7 +26,7 @@ MAPCREATION_ACTIVE = True #Creating the generation of map according to raw_inter
 MAPGENERATION_ACTIVE = True #Manhattan generation usage
 ADDMANUALVEHICLE_ACTIVE = False #Adding to new vehicle for present scenario 
 ROUTECREATION_ACTIVE = False #Creating the generation of route file
-TL = True #Adding Traffic_Lights
+TL = False #Adding Traffic_Lights
 
 if(LOGGER_ACTIVE==True):
     class StreamToLogger:
@@ -74,20 +75,24 @@ def run(induction_loop_number,edge_len,parameters):
             #sumocontrolled_case_TC1_row(step)
             #sumocontrolled_case_TC2(step)
             #sumocontrolled_case_TC2_row(step)
-            sumocontrolled_case_TC3(step)
+            #sumocontrolled_case_TC3(step)
             #sumocontrolled_case_TC3_row(step)
             #sumocontrolled_case_TC4(step)
             #sumocontrolled_case_TC4_row(step)
             #sumocontrolled_case_TC5(step)
             #sumocontrolled_case_TC5_row(step)
+            sumocontrolled_case_TC1_dist(step) 
+            sumocontrolled_case_TC1_row_dist(step)
+
         else:
             #uncontrolled_case(step)
             #uncontrolled_case_TC1(step)
             #uncontrolled_case_TC2(step)
             #uncontrolled_case_TC3(step)
             #uncontrolled_case_TC4(step)
-            uncontrolled_case_TC5(step)
+            #uncontrolled_case_TC5(step)
             #uncontrolled_case_TC5_TL(step)
+            uncontrolled_case_TC1_dist(step)
             pass
 
         step += 1
@@ -128,8 +133,8 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     if(MAPCREATION_ACTIVE==True):
-        raw_intersection_num = 3 #intersection number for x line (parametric)
-        column_intersection_num = 3 #intersection number for y line (parametric)
+        raw_intersection_num = 1 #intersection number for x line (parametric)
+        column_intersection_num = 1 #intersection number for y line (parametric)
         edge_len = 500 #the length of edge (parametric)
         detector_pos = 12 #detector position (parametric)
         create_map(raw_intersection_num,column_intersection_num,edge_len,detector_pos, TL)
@@ -143,7 +148,7 @@ if __name__ == "__main__":
 
     elif(MAPGENERATION_ACTIVE==True):
         raw_intersection_num = 1
-        column_intersection_num = 2
+        column_intersection_num = 1
         edge_len = 500
         network_file_creation(raw_intersection_num,column_intersection_num,edge_len)
     else:
@@ -164,6 +169,6 @@ if __name__ == "__main__":
     parameters = set_parameters(parameters)
     run(node_num,edge_len,parameters)
 
-    parse_col()
-    parse_fuel()
+    #parse_col()
+    #parse_fuel()
     create_report(parameters)

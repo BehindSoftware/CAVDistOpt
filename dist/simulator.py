@@ -11,6 +11,7 @@ from dist.platooning import platooning_optimization
 from dist.intersected import intersected_optimization
 from dist.coordinator import consensus_admm_algorithm #,admm_algorithm
 from TCs import uncontrolled_case_TC1, uncontrolled_case_TC2, uncontrolled_case_TC3, uncontrolled_case_TC4, uncontrolled_case_TC5
+from TCs_dist import uncontrolled_case_TC1_dist
 
 map_to_lane = {}
 map_to_vehicle_num = {}
@@ -77,9 +78,10 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         #test_case_four(step)
         #uncontrolled_case_TC1(step)
         #uncontrolled_case_TC2(step)
-        uncontrolled_case_TC3(step)
+        #uncontrolled_case_TC3(step)
         #uncontrolled_case_TC4(step)
         #uncontrolled_case_TC5(step)
+        uncontrolled_case_TC1_dist(step)
         print("Optimized case has been activated.")
         return
 
@@ -89,6 +91,9 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         x = {}
         xr_cons = {}
         x_pos = {}
+        length_of_lanes = [0,0,0,0,0]
+        number_of_vehicle_intersected = 0
+        number_of_vehicle_platooning = 0
     else:
         #Reset values for next step
         intersected_list = []
