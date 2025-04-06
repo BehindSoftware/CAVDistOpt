@@ -35,13 +35,14 @@ def check_convergence(x, z_new, z_prev, length_of_lanes):
     # Check convergence
     return (primal_residual < TOLERANCE) and (dual_residual < TOLERANCE)
 
-def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle):
+def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result):
     
     # Extract data for all vehicles in the intersection
     v_inter = {}
     x_inter = {}
     xr_inter = {}
     x_pos_inter = {}
+    consensus_idx = 0
 
     # Collect vehicle indices for the intersection
     vehicles_in_inter = [vehicle_id for vehicle_id in intersected_list]
@@ -49,12 +50,13 @@ def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_interse
     # Check if there are any vehicles in the intersection
     if not vehicles_in_inter:
         print("prepare_data: No car in intersection for whole lanes")
-        return v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle# Skip if no vehicles are found in the intersection
+        return v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle, ids_for_result# Skip if no vehicles are found in the intersection
 
     # Populate the vehicle-specific data structures
     for vehicle_id in enumerate(vehicles_in_inter):
         vehicle_index = map_to_vehicle_num[vehicle_id[1]]
         lane_number = map_to_lane[vehicle_id[1]]
+        ids_for_result[0][consensus_idx] = vehicle_id
 
         # Fill vehicle-specific data dictionaries
         v_inter[(lane_number, vehicle_index)] = v_intersected.get((lane_number, vehicle_index), 0)
@@ -62,16 +64,18 @@ def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_interse
         xr_inter[(lane_number, vehicle_index)] = xr_cons_intersected.get((lane_number, vehicle_index), 0)
         x_pos_inter[(lane_number, vehicle_index)] = x_pos_intersected.get((lane_number, vehicle_index), 0)
         number_of_vehicle += 1
+        consensus_idx += 1
     
-    return v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle
+    return v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle, ids_for_result
 
-def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle):
+def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result):
 
     # Extract data for all vehicles in this lane
     v_lane = {}
     x_lane = {}
     xr_lane = {}
     x_pos_lane = {}
+    consensus_idx = 0
 
     # Collect vehicle indices for the current lane
     vehicles_in_lane = [vehicle_id for vehicle_id in platooning_list if map_to_lane[vehicle_id] == lane_number]
@@ -79,11 +83,12 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
     # Check if there are any vehicles in this lane
     if not vehicles_in_lane:
         print("No car in lane: " + str(lane_number))
-        return v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle # Skip if no vehicles are found in the current lane
+        return v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle, ids_for_result # Skip if no vehicles are found in the current lane
 
     # Populate the lane-specific data structures
     for vehicle_id in enumerate(vehicles_in_lane):
         vehicle_index = map_to_vehicle_num[vehicle_id[1]]
+        ids_for_result[lane_number][consensus_idx] = vehicle_id
 
         # Fill lane-specific data dictionaries
         v_lane[(lane_number, vehicle_index)] = v_platooning.get((lane_number, vehicle_index), 0)
@@ -91,10 +96,11 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
         xr_lane[(lane_number, vehicle_index)] = xr_cons_platooning.get((lane_number, vehicle_index), 0)
         x_pos_lane[(lane_number, vehicle_index)] = x_pos_platooning.get((lane_number, vehicle_index), 0)
         number_of_vehicle += 1
+        consensus_idx += 1
 
     print("prepare_data_platooning: ")
     print(v_lane, x_lane, xr_lane, x_pos_lane)
-    return v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle
+    return v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle, ids_for_result
 
 def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
 
@@ -180,11 +186,13 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
     u = np.empty((len(length_of_lanes),), dtype=object)
     x = np.empty((len(length_of_lanes),), dtype=object)
     result = np.empty((len(length_of_lanes),), dtype=object)
+    ids_for_result = np.empty((len(length_of_lanes),), dtype=object)
     for i, length in enumerate(length_of_lanes):
         z[i] = np.zeros(length)
         u[i] = np.zeros(length)
         x[i] = np.zeros(length)
         result[i] = np.zeros(length)
+        ids_for_result[i] = np.zeros(length, dtype=object)
 
     #Vehicle knowledge like speed, position, acceleration are hold in dictionary like v_inter: {(1, 1): 10.5, (1, 2): 12.3, (1, 3): 9.8}
     distances_dict = {}
@@ -199,9 +207,10 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
         print("u:" + str(u))
         print("x:" + str(x))
         print("result:" + str(result))
+        print("result:" + str(ids_for_result))
 
         # Prepare data for intersected cars
-        v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle = prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle)
+        v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle, ids_for_result = prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result)
 
         # Step 1: Local optimization for intersected group
         if number_of_vehicle!= 0:
@@ -222,7 +231,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             consensus_idx=len(z[laneID])-1 #index starts from 0 so need -1
             number_of_vehicle = 0
             #prepare_data_platooning to take car data which are current lane
-            v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle = prepare_data_platooning(platooning_list,laneID, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle)
+            v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle, ids_for_result = prepare_data_platooning(platooning_list,laneID, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result)
 
             # Perform optimization for all vehicles in the current lane
             if number_of_vehicle!= 0:
@@ -249,7 +258,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             print(f"Convergence reached after {iteration} iterations.")
             break
 
-    return result
+    return result, ids_for_result
 
 ######################################################################################################
 # def admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num):

@@ -72,6 +72,29 @@ def set_optimized_acceleration(number_of_lane, number_of_vehicle, detected_list,
                 # if(step==8):
                 #     traci.vehicle.setSpeed('3005',22.22)
 
+def get_vehicle_position(vehicle_id, ids_for_result):
+    for lane_index, lane_array in enumerate(ids_for_result):
+        for vehicle_index, vid in enumerate(lane_array):
+            if vid == vehicle_id:
+                return (lane_index, vehicle_index)
+    return (-1, -1)  # Not found
+
+def set_dist_acceleration(number_of_lane, number_of_vehicle, detected_list, result, ids_for_result, step):
+    vehicle_list_in_scenario = traci.vehicle.getIDList()
+    t = 1 #TO DO: hardcoded, it should be changed after all
+    if result is not None and any(len(r) > 0 for r in result):
+        for vehicle in detected_list:
+            if vehicle in vehicle_list_in_scenario: #Adding for traci.exceptions.TraCIException: Vehicle 'XXX' is not known.
+                lane_index, vehicle_index = get_vehicle_position(vehicle, ids_for_result)
+                calculated_speed = traci.vehicle.getSpeed(vehicle)+result[lane_index][vehicle_index]*t #t=1
+                print(f"Step {step} | Vehicle ID: {vehicle} | Before speed: {traci.vehicle.getSpeed(vehicle):.2f} m/s | "
+                          f"Acceleration: {result[lane_index][vehicle_index]:.2f} m/s² | New speed: {calculated_speed:.2f} m/s")
+                traci.vehicle.setSpeed(vehicle,calculated_speed)
+
+                # #FOR TEST
+                # if(step==8):
+                #     traci.vehicle.setSpeed('3005',22.22)
+
 def optimized_case(step,induction_loop_number,edge_len,parameters):
     if(step<6): #8 for uncontrolled case (Clarify value according to catch cars however they are created)
         #uncontrolled_case(step)
@@ -196,18 +219,8 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                 intersected_information.extend([number_of_lane, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters, intersected_list])
                 platooning_information.extend([number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning, parameters, platooning_list])
                 #admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
-                consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num, length_of_lanes)
-
-                #TO DO: Implementation of give speeds to cars
-                #Call intersected.py to handle optimization according to l
-                # acceleration = intersected_optimization(number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters)
-                #print(acceleration)
-                #set_optimized_acceleration(number_of_lane, number_of_vehicle, intersected_list, acceleration, step)
-
-                #Call platooning.py to handle optimization according to s
-                # acceleration = platooning_optimization(number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, parameters)
-                #print(acceleration)
-                #set_optimized_acceleration(number_of_lane, number_of_vehicle, platooning_list, acceleration, step)
+                result, ids_for_result = consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num, length_of_lanes)
+                set_dist_acceleration(number_of_lane, number_of_vehicle, detected_list, result, ids_for_result, step)
 
         #Resetting Step
         if(DIST_OPT==False):

@@ -11,17 +11,17 @@ def uncontrolled_case_TC1_dist(step):
     
     # List of vehicle IDs with their respective steps and speeds
     vehicle_list = [
-        {"id": "1101", "step": 1, "speed": 2.5},
-        {"id": "1102", "step": 1, "speed": 2.5},
-        {"id": "1103", "step": 1, "speed": 2.5},
-        {"id": "1104", "step": 1, "speed": 2.5},
+        {"id": "1101", "step": 1, "speed": 7.5},
+        {"id": "1102", "step": 1, "speed": 7.5},
+        {"id": "1103", "step": 1, "speed": 7.5},
+        {"id": "1104", "step": 1, "speed": 7.5},
         {"id": "1106", "step": 3, "speed": 4.0},
         {"id": "1108", "step": 3, "speed": 4.0},
         {"id": "1109", "step": 3, "speed": 4.0},
-        {"id": "1111", "step": 5, "speed": 3.5},
-        {"id": "1114", "step": 5, "speed": 3.5},
-        {"id": "1116", "step": 7, "speed": 7.5},
-        {"id": "1118", "step": 7, "speed": 7.5}
+        {"id": "1111", "step": 5, "speed": 2.5},
+        {"id": "1114", "step": 5, "speed": 2.5},
+        {"id": "1116", "step": 7, "speed": 1.5},
+        {"id": "1118", "step": 7, "speed": 1.5}
     ]
         
     # Process vehicles for the current step
