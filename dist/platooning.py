@@ -91,6 +91,9 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
                 constraints.append(v[number_of_lane, car_index]>=(z+u))
                 local_v_flag = True
+    else:
+        constraints.append(v[number_of_lane, car_index]>=(z+u))
+        local_v_flag = True
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(number_of_lane, car_index)] != 0:

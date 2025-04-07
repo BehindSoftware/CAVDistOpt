@@ -132,7 +132,7 @@ def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
             else:
                 # Calculate the average of each row and update the z values with these averages
                 for lane_number in range(1,len(z_updated)):
-                    row_average = np.mean(z_updated[lane_number])
+                    row_average = np.mean(x[lane_number])
                     z_updated[lane_number] = np.full_like(z_updated[lane_number], row_average)
 
     return z_updated
