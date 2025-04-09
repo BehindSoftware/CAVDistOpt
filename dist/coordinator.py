@@ -9,7 +9,7 @@ WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 # Consensus ADMM parameters
 MAX_ITER = 10
 RHO = 1.0
-TOLERANCE = 1.5 #Determine according to sensitivity 
+TOLERANCE = 7.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len))
 
 # Function to check convergence
 def check_convergence(x, z_new, z_prev, length_of_lanes):
@@ -22,20 +22,29 @@ def check_convergence(x, z_new, z_prev, length_of_lanes):
 
     # Compute residuals for each lane
     for lane_number in range(len(length_of_lanes)):
+        
         # Compute primal residuals for the current lane
-        primal_residual_sum += np.linalg.norm(x[lane_number] - z_new[lane_number])
+        diff = x[lane_number] - z_new[lane_number]
+        mask = x[lane_number] != -1
+        primal_residual_sum += np.linalg.norm(diff[mask])
+        print(primal_residual_sum)
 
         # Compute dual residuals for the current lane using the change in consensus variables
-        dual_residual_sum += np.linalg.norm(z_new[lane_number] - z_prev[lane_number])
+        diff2 = z_new[lane_number] - z_prev[lane_number]
+        mask2 = x[lane_number] != -1
+        dual_residual_sum += np.linalg.norm(diff2[mask2])
+        print(dual_residual_sum)
 
     # Compute overall residuals
     primal_residual = primal_residual_sum
     dual_residual = RHO * dual_residual_sum
 
+    print(primal_residual, dual_residual)
+
     # Check convergence
     return (primal_residual < TOLERANCE) and (dual_residual < TOLERANCE)
 
-def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result):
+def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result, iteration, z):
     
     # Extract data for all vehicles in the intersection
     v_inter = {}
@@ -58,6 +67,9 @@ def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_interse
         lane_number = map_to_lane[vehicle_id[1]]
         ids_for_result[0][consensus_idx] = vehicle_id
 
+        if iteration == 0:
+            z[0][consensus_idx] = x_intersected.get((lane_number, vehicle_index), 0)
+
         # Fill vehicle-specific data dictionaries
         v_inter[(lane_number, vehicle_index)] = v_intersected.get((lane_number, vehicle_index), 0)
         x_inter[(lane_number, vehicle_index)] = x_intersected.get((lane_number, vehicle_index), 0)
@@ -68,7 +80,7 @@ def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_interse
     
     return v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle, ids_for_result
 
-def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result):
+def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result, iteration, z):
 
     # Extract data for all vehicles in this lane
     v_lane = {}
@@ -89,6 +101,9 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
     for vehicle_id in enumerate(vehicles_in_lane):
         vehicle_index = map_to_vehicle_num[vehicle_id[1]]
         ids_for_result[lane_number][consensus_idx] = vehicle_id
+
+        if iteration == 0:
+            z[lane_number][consensus_idx] = v_platooning.get((lane_number, vehicle_index), 0)
 
         # Fill lane-specific data dictionaries
         v_lane[(lane_number, vehicle_index)] = v_platooning.get((lane_number, vehicle_index), 0)
@@ -210,7 +225,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
         print("result:" + str(ids_for_result))
 
         # Prepare data for intersected cars
-        v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle, ids_for_result = prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result)
+        v_inter, x_inter, xr_inter, x_pos_inter, number_of_vehicle, ids_for_result = prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result, iteration, z)
 
         # Step 1: Local optimization for intersected group
         if number_of_vehicle!= 0:
@@ -231,7 +246,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             consensus_idx=len(z[laneID])-1 #index starts from 0 so need -1
             number_of_vehicle = 0
             #prepare_data_platooning to take car data which are current lane
-            v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle, ids_for_result = prepare_data_platooning(platooning_list,laneID, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result)
+            v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle, ids_for_result = prepare_data_platooning(platooning_list,laneID, v_platooning, x_platooning, xr_cons_platooning, x_pos_platooning, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result, iteration, z)
 
             # Perform optimization for all vehicles in the current lane
             if number_of_vehicle!= 0:
@@ -241,6 +256,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                     result[laneID][consensus_idx], x[laneID][consensus_idx] = platooning_optimization(laneID, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[laneID][consensus_idx], u[laneID][consensus_idx], distances_dict, xr_dict, idx)
                     print("Accelaration:" + str(result[laneID][consensus_idx]) + "Local_v:" + str(x[laneID][consensus_idx]))
                     consensus_idx-=1
+        
         # Step 3: Consensus step
 
         z = update_consensus(z, u, x, cars_in_lanes, length_of_lanes)
