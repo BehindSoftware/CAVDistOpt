@@ -14,7 +14,7 @@ import numpy as np
 #car_index is index for vehicle -> number_of_lane
 
 
-def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, distances_dict, xr_dict, car_index):
+def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos, parameters, z, u, distances_dict, xr_dict, car_index, RHO):
     
     #Constants
     t = parameters[0]                           #time scale: t is the measurement frequency, it can be 1 second for now.
@@ -105,6 +105,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     objective = cp.Minimize(
     cp.sum([
         xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
+        + (RHO / 2) * cp.square(v[i, 1] - z + u)
         for i in range(car_index, car_index + 1)
         if xr_cons[(i, 1)] != 0
     ])
