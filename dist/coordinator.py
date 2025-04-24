@@ -274,6 +274,9 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
             print(f"Convergence reached after {iteration} iterations.")
             break
 
+    print(result)
+    print(ids_for_result)
+    
     return result, ids_for_result
 
 ######################################################################################################

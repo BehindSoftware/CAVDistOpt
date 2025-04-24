@@ -74,9 +74,9 @@ def set_optimized_acceleration(number_of_lane, number_of_vehicle, detected_list,
 
 def get_vehicle_position(vehicle_id, ids_for_result):
     for lane_index, lane_array in enumerate(ids_for_result):
-        for vehicle_index, vid in enumerate(lane_array):
-            if vid == vehicle_id:
-                return (lane_index, vehicle_index)
+        for position_tuple in lane_array:
+            if position_tuple[1] == vehicle_id:
+                return (lane_index, position_tuple[0])  # (lane, vehicle_index)
     return (-1, -1)  # Not found
 
 def set_dist_acceleration(number_of_lane, number_of_vehicle, detected_list, result, ids_for_result, step):
