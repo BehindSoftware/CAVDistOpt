@@ -67,32 +67,24 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
         if value != 0 and j==car_index:
             constraints.append(v[number_of_lane, j] == a[number_of_lane, j] * t + v_input[(number_of_lane, j)])
 
-    #TO DO: check z+u constraint is correct
     #Safe distance constraints (we need to the first car values in here)
     if number_of_vehicle > 1: #if we have 1 car, we need to check with intersected
         if car_index==1: #Means the car which need the first car information from intersected list
             if (number_of_lane,1) in xr_dict and xr_dict[(number_of_lane, 1)] is not None and (number_of_lane, 1) in xr_cons: #Check for whether there is front car in the intersection
                 if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 1)] != 0:
                     constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 1] >= lv + D + R * v[number_of_lane, 1]]
-                    #constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 1] >= z + u]
-                    constraints.append(v[number_of_lane, car_index]>=(z+u))
                     local_v_flag = True
                 else:
                     pass
                     #Infeasible solution
             else: #The intersected cars in platooning list
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
-                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
-                constraints.append(v[number_of_lane, car_index]>=(z+u))
                 local_v_flag = True
         else: #other lane cars
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
-                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= z + u)
-                constraints.append(v[number_of_lane, car_index]>=(z+u))
                 local_v_flag = True
     else:
-        constraints.append(v[number_of_lane, car_index]>=(z+u))
         local_v_flag = True
 
     # Velocity constraints: v should be between 0 and epsilon_prime

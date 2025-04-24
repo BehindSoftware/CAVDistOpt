@@ -66,16 +66,12 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
                 local_v_flag = True
                 if(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2<0): #This checks for absolute between F and X^t+1
                     constraints.append((F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
-                    constraints.append((F-x[car_index,1])>=(z+u))
                 elif(check_for_will_pass_inters>0 and check_for_will_pass_inters_lane2<0):
                     constraints.append((x[car_index,1]-F)+(F-x[car_index+1,1])>=(lv+D))
-                    constraints.append((x[car_index,1]-F)>=(z+u))
                 elif(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2>0):
                     constraints.append((F-x[car_index,1])+(x[car_index+1,1]-F)>=(lv+D))
-                    constraints.append((F-x[car_index,1])>=(z+u))
                 else:
                     constraints.append((x[car_index,1]-F)+(x[car_index+1,1]-F)>=(lv+D))
-                    constraints.append((x[car_index,1]-F)>=(z+u))
         elif(x_input[car_index,1]>F and x_input[car_index+1,1]<F):
             constraints.append ((2*F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
         elif(x_input[car_index,1]<F and x_input[car_index+1,1]>F):
