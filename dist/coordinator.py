@@ -10,6 +10,7 @@ WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 MAX_ITER = 10
 RHO = 1.0
 TOLERANCE = 7.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len))
+TIME_GAP = 2.0
 
 # Function to check convergence
 def check_convergence(x, z_new, z_prev, length_of_lanes):
@@ -27,13 +28,13 @@ def check_convergence(x, z_new, z_prev, length_of_lanes):
         diff = x[lane_number] - z_new[lane_number]
         mask = x[lane_number] != -1
         primal_residual_sum += np.linalg.norm(diff[mask])
-        print(primal_residual_sum)
+        #print(primal_residual_sum)
 
         # Compute dual residuals for the current lane using the change in consensus variables
         diff2 = z_new[lane_number] - z_prev[lane_number]
         mask2 = x[lane_number] != -1
         dual_residual_sum += np.linalg.norm(diff2[mask2])
-        print(dual_residual_sum)
+        #print(dual_residual_sum)
 
     # Compute overall residuals
     primal_residual = primal_residual_sum
@@ -67,14 +68,17 @@ def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_interse
         lane_number = map_to_lane[vehicle_id[1]]
         ids_for_result[0][consensus_idx] = vehicle_id
 
-        if iteration == 0:
-            z[0][consensus_idx] = x_intersected.get((lane_number, vehicle_index), 0)
-
         # Fill vehicle-specific data dictionaries
         v_inter[(lane_number, vehicle_index)] = v_intersected.get((lane_number, vehicle_index), 0)
         x_inter[(lane_number, vehicle_index)] = x_intersected.get((lane_number, vehicle_index), 0)
         xr_inter[(lane_number, vehicle_index)] = xr_cons_intersected.get((lane_number, vehicle_index), 0)
         x_pos_inter[(lane_number, vehicle_index)] = x_pos_intersected.get((lane_number, vehicle_index), 0)
+
+        #TO DO: This should be tested for F OR X^t+1
+        F = 495 #TO DO: PAY ATTENTION FOR CONSISTENCY!!!
+        if iteration == 0:
+            z[0][consensus_idx] = (F - x_inter[(lane_number, vehicle_index)]) / v_inter[(lane_number, vehicle_index)]
+
         number_of_vehicle += 1
         consensus_idx += 1
     
@@ -144,8 +148,10 @@ def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
                     first_flag = False
                     pre_idx = consensus_idx
                 else:
-                    z_updated[lane_number][consensus_idx] = max(x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO, z_updated[lane_number][pre_idx])
+                    #TO DO: It should be checked because it is not correct orientation
+                    z_updated[lane_number][consensus_idx] = min(x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO, z_updated[lane_number][pre_idx]) #+ TIME_GAP
                     pre_idx = consensus_idx
+                print(lane_number,consensus_idx,z_updated[lane_number][consensus_idx],x[lane_number][consensus_idx])
         else: #for platooning
             if(WEIGHTED_AVERAGE_CONSENSUS_ACTIVE==True):
                 #TO DO: NOT IMPLEMENTED need Weights and think structure
