@@ -101,7 +101,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     objective = cp.Minimize(
     cp.sum([
         xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
-        + (RHO / 2) * cp.square(v[i, 1] - z + u)
+        + (RHO / 2) * cp.square((F-x[i, 1]) - z + u)
         for i in range(car_index, car_index + 1)
         if xr_cons[(i, 1)] != 0
     ])
@@ -134,8 +134,8 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     #print("Distance: " + str(distance))
 
-    if local_v_flag == True:
-        local_v = abs(F-x[(car_index, 1)].value) #local_v is distance to intersection
+    #if local_v_flag == True:
+    local_v = abs(F-x[(car_index, 1)].value) #local_v is distance to intersection
 
     return result, local_v
 

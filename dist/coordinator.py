@@ -117,6 +117,17 @@ def prepare_data_platooning(platooning_list,lane_number, v_platooning, x_platoon
     print(v_lane, x_lane, xr_lane, x_pos_lane)
     return v_lane, x_lane, xr_lane, x_pos_lane, number_of_vehicle, ids_for_result
 
+def sort_lanes_by_first_vehicle_position(x):
+
+    lane_positions = {}
+    for consensus_idx in range(0,len(x[0])):
+        lane_positions[consensus_idx] = x[0][consensus_idx]  # First vehicle in the lane
+    
+    # Sort lane numbers by first vehicle's x position (ascending)
+    sorted_lanes = sorted(lane_positions.items(), key=lambda item: item[1])
+    return [consensus_idx for consensus_idx, _ in sorted_lanes]
+
+
 def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
 
     #Create same structure with z
@@ -126,16 +137,15 @@ def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
         if lane_number==0: #for intersection
             first_flag = True
             consensus_idx = 0 #For intersection index 0 z[0], u[0], x[0]
-            for idx in range(1,5): #each lane in the intersection lane 1,2,3,4
-                if idx in cars_in_lanes and cars_in_lanes[idx] != -1:
-                    if first_flag==True:
-                        z_updated[lane_number][consensus_idx] = x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO
-                        first_flag = False
-                        pre_idx = consensus_idx
-                    else:
-                        z_updated[lane_number][consensus_idx] = max(x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO, z_updated[lane_number][pre_idx])
-                        pre_idx = consensus_idx
-                    consensus_idx+=1
+            #TO DO: Loop for vehicles according to their distance which they are comes from their x instead of from 1 to 4 
+            for consensus_idx in sort_lanes_by_first_vehicle_position(x): #each lane in the intersection lane 1,2,3,4
+                if first_flag==True:
+                    z_updated[lane_number][consensus_idx] = x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO
+                    first_flag = False
+                    pre_idx = consensus_idx
+                else:
+                    z_updated[lane_number][consensus_idx] = max(x[lane_number][consensus_idx] + u[lane_number][consensus_idx] / RHO, z_updated[lane_number][pre_idx])
+                    pre_idx = consensus_idx
         else: #for platooning
             if(WEIGHTED_AVERAGE_CONSENSUS_ACTIVE==True):
                 #TO DO: NOT IMPLEMENTED need Weights and think structure
@@ -236,7 +246,8 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
 
                 if cars_in_lanes[laneID] != -1:
                     print("First car of LaneID:"+str(laneID)+ " Consensus_index:"+ str(consensus_idx))
-                    result[0][consensus_idx], x[0][consensus_idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[0][consensus_idx], u[0][consensus_idx], distances_dict, xr_dict, laneID, RHO) #Intersected is hold in 0 index
+                    lane_has_multiple_cars = number_of_vehicle > 1
+                    result[0][consensus_idx], x[0][consensus_idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[0][consensus_idx], u[0][consensus_idx], distances_dict, xr_dict, laneID, RHO if lane_has_multiple_cars else 0) #Intersected is hold in 0 index
                     print("Accelaration:" + str(result[0][consensus_idx]) + "Local_v:" + str(x[0][consensus_idx]))
                     consensus_idx+=1
 
@@ -253,7 +264,8 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                 for idx in reversed(range(1,len(z[laneID])+1)):
                     #parsing_vehicle_data to take current car data
                     number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data_platooning(laneID, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
-                    result[laneID][consensus_idx], x[laneID][consensus_idx] = platooning_optimization(laneID, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[laneID][consensus_idx], u[laneID][consensus_idx], distances_dict, xr_dict, idx, RHO)
+                    lane_has_multiple_cars = number_of_vehicle > 1
+                    result[laneID][consensus_idx], x[laneID][consensus_idx] = platooning_optimization(laneID, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[laneID][consensus_idx], u[laneID][consensus_idx], distances_dict, xr_dict, idx, RHO if lane_has_multiple_cars else 0)
                     print("Accelaration:" + str(result[laneID][consensus_idx]) + "Local_v:" + str(x[laneID][consensus_idx]))
                     consensus_idx-=1
         
