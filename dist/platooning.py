@@ -123,6 +123,10 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     #distance = {key: x[key].value for key in x}
     # Convert results to a list
 
+    print(v[(number_of_lane, car_index)].value)
+    print(x[(number_of_lane, car_index)].value)
+    print(a[(number_of_lane, car_index)].value)
+
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
         print("Problem is infeasible.")

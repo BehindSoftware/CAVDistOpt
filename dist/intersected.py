@@ -120,6 +120,9 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
+    print(v[(car_index, 1)].value)
+    print(x[(car_index, 1)].value)
+    print(a[(car_index, 1)].value)
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
@@ -139,7 +142,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     #print("Distance: " + str(distance))
 
     #if local_v_flag == True:
-    local_v = (x[(car_index, 1)].value-x_input[(car_index, 1)])/v_input[(car_index, 1)] #local_v is time to intersection
+    local_v = (x[(car_index, 1)].value-x_input[(car_index, 1)])/v[(car_index, 1)].value #local_v is time to intersection
 
     return result, local_v
 
