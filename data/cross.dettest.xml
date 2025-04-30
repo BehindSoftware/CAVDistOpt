@@ -1,6 +1,10 @@
 <additional>
 <inductionLoop id="1" lane="101_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
+<inductionLoop id="5" lane="1_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
 <inductionLoop id="2" lane="102_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
+<inductionLoop id="6" lane="2_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
 <inductionLoop id="3" lane="103_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
+<inductionLoop id="7" lane="3_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
 <inductionLoop id="4" lane="104_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
+<inductionLoop id="8" lane="4_0" pos="12" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>
 </additional>

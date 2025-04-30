@@ -161,7 +161,7 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--collision.check-junctions", "--collision.action=remove", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt"])
+                             "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--collision.check-junctions", "--emergency-insert", "--collision.action=remove", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt"])
     
     node_num = raw_intersection_num*column_intersection_num
 
