@@ -142,6 +142,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
     vehicle_list_in_scenario = traci.vehicle.getIDList() #take optimization parameters of the vehicles on the induction (Check there is a car on the intersection(induction loop))
     for j in vehicle_list_in_scenario:
         print("Vehicle {} speed: {}".format(j,traci.vehicle.getSpeed(j)))
+        traci.vehicle.setSpeed(j, -1)
         traci.vehicle.setSpeedMode(j,31) #Take control about speed (not sure 0 or 32 but not 31)
         traci.vehicle.setLaneChangeMode(j, 512) #Take control about lanechange
 

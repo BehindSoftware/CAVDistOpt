@@ -1,5 +1,5 @@
 <routes>
-    <vType id="test" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="300" jmTimegapMinor="0" jmIgnoreJunctionFoeProb="1" jmCrossingGap="0" sigma="1" guiShape="passenger/van" length="4" maxSpeed="50" accel="2.6" decel="4.5"/>
+    <vType id="test" jmIgnoreFoeProb="1" jmIgnoreFoeSpeed="300" jmTimegapMinor="0" jmIgnoreJunctionFoeProb="1" jmCrossingGap="0" sigma="1" guiShape="passenger/van" length="4" maxSpeed="25" accel="2.6" decel="4.5"/>
     <vehicle id="1004" depart="1.00" color="0,0,1" type="test"><route edges="102 4"/>
     </vehicle>
     <vehicle id="1007" depart="1.00" color="0,0,1" type="test"><route edges="104 2"/>

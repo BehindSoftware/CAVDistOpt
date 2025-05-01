@@ -29,7 +29,7 @@ def uncontrolled_case_TC1_dist(step):
         if vehicle["step"] == step:
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 32)
-            traci.vehicle.setLaneChangeMode(vehicle["id"], 0)
+            traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
 
 def sumocontrolled_case_TC1_dist(step):
     print("Sumocontrolled TC-1")
@@ -54,7 +54,7 @@ def sumocontrolled_case_TC1_dist(step):
         if vehicle["step"] == step:
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 24)
-            traci.vehicle.setLaneChangeMode(vehicle["id"], 0)
+            traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
     
 
 def sumocontrolled_case_TC1_row_dist(step):
@@ -80,4 +80,4 @@ def sumocontrolled_case_TC1_row_dist(step):
         if vehicle["step"] == step:
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 31)
-            traci.vehicle.setLaneChangeMode(vehicle["id"], 0)
+            traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
