@@ -102,13 +102,23 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     #     print(constraints[i])
 
     # Objective function
+    # objective = cp.Minimize(
+    # cp.sum([
+    #     xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
+    #     + (100000000000 / 2) * cp.square((x[i, 1]-x_input[(i, 1)])/v_input[(i, 1)] - z + u) #TO DO: Not sure about brake for most close to intersection
+    #     for i in range(car_index, car_index + 1)
+    #     if xr_cons[(i, 1)] != 0
+    # ])
+    # )
+
     objective = cp.Minimize(
-    cp.sum([
-        xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
-        + (100000000000 / 2) * cp.square((x[i, 1]-x_input[(i, 1)])/v_input[(i, 1)] - z + u) #TO DO: Not sure about brake for most close to intersection
-        for i in range(car_index, car_index + 1)
-        if xr_cons[(i, 1)] != 0
-    ])
+        cp.sum([
+            (xr_cons[(i, 1)] - x[i, 1]) +
+            gamma * cp.abs(v[i, 1] - v_input[(i, 1)]) +
+            (RHO / 2) * ((F - x_input[(i, 1)]) * cp.inv_pos(v[i, 1]) - z + u)
+            for i in range(car_index, car_index + 1)
+            if xr_cons.get((i, 1), 0) != 0
+        ])
     )
 
     #test
