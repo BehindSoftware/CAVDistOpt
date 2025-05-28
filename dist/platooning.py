@@ -101,13 +101,15 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     #test
     # for i in range(0, len(constraints)):
     #     print(constraints[i])
-    
+    print("Berkay")
+    print(RHO)
+    print("Saydam")
     #TO DO: Do we need to calculate for one car or both of them
     # Objective function
     objective = cp.Minimize(
     cp.sum([
         xr_cons[(number_of_lane, j)] - x[number_of_lane, j] + gamma * cp.abs(v[number_of_lane, j] - v_input[(number_of_lane, j)])
-        + (RHO / 2) * cp.square(v[number_of_lane, j] - z + u)
+        + (10 / 2) * cp.square(v[number_of_lane, j] - z + u)
         for j in range(car_index, car_index + 1)
         if xr_cons[(number_of_lane, j)] != 0
     ])
@@ -124,9 +126,9 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     #distance = {key: x[key].value for key in x}
     # Convert results to a list
 
-    print(v[(number_of_lane, car_index)].value)
-    print(x[(number_of_lane, car_index)].value)
-    print(a[(number_of_lane, car_index)].value)
+    # print(v[(number_of_lane, car_index)].value)
+    # print(x[(number_of_lane, car_index)].value)
+    # print(a[(number_of_lane, car_index)].value)
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
