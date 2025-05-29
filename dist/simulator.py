@@ -16,6 +16,7 @@ from TCs_dist import uncontrolled_case_TC1_dist
 map_to_lane = {}
 map_to_vehicle_num = {}
 
+#DESC SORT: Sorting the cars in array
 def sortSecond(val):
     return val[1]
 
@@ -27,7 +28,9 @@ def get_sorted_vehicle_positions(detector_cars, vehicle_list_in_scenario):
 
     vehicle_ids = [vehicle for vehicle, position in vehicle_positions]
     return vehicle_ids
+#DESC SORT: END
 
+#DESC CAL: Xr calculation
 def calculate_desired_route(vehicle_id):
     # Calculate the total distance
     total_distance = 0
@@ -41,7 +44,9 @@ def calculate_desired_route(vehicle_id):
     #TO DO: Add junction with test a junction length checking dif traveled vs. odyometer
     #print(f"Total distance for vehicle {vehicle_id}: {total_distance} meters")
     return total_distance
+#DESC CAL: END
 
+#DESC FILL: Fills arrays for optimization
 def create_the_inputs(number_of_lane, number_of_vehicle, v, x, xr_cons, x_pos):
     for i in range(5): #number_of_lane+1
         for j in range(number_of_vehicle+1):
@@ -59,7 +64,9 @@ def create_the_inputs(number_of_lane, number_of_vehicle, v, x, xr_cons, x_pos):
     # print("xr",xr_cons)
     # print("x_pos",x_pos)
     return number_of_lane, number_of_vehicle, v, x, xr_cons, x_pos
+#DESC FILL: END
 
+#DESC SET_OPT_FOR_CENT : Set optimized acceleration for centralized optimization
 def set_optimized_acceleration(number_of_lane, number_of_vehicle, detected_list, acceleration, step):
     vehicle_list_in_scenario = traci.vehicle.getIDList()
     
@@ -71,7 +78,9 @@ def set_optimized_acceleration(number_of_lane, number_of_vehicle, detected_list,
                 # #FOR TEST
                 # if(step==8):
                 #     traci.vehicle.setSpeed('3005',22.22)
+#DESC SET_OPT_FOR_CENT : END
 
+#DESC SET_OPT_FOR_DIST : Set optimized acceleration for distributed optimization
 def get_vehicle_position(vehicle_id, ids_for_result):
     for lane_index, lane_array in enumerate(ids_for_result):
         for position_tuple in lane_array:
@@ -94,8 +103,11 @@ def set_dist_acceleration(number_of_lane, number_of_vehicle, detected_list, resu
                 # #FOR TEST
                 # if(step==8):
                 #     traci.vehicle.setSpeed('3005',22.22)
+#DESC SET_OPT_FOR_DIST : END
 
+#DESC OPTIMIZATION: Optimization phase is calling for each step
 def optimized_case(step,induction_loop_number,edge_len,parameters):
+    #Not optimization for add vehicles to scenario
     if(step<6): #8 for uncontrolled case (Clarify value according to catch cars however they are created)
         #uncontrolled_case(step)
         #test_case_four(step)
@@ -127,7 +139,6 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         number_of_vehicle_intersected = 0
         number_of_vehicle_platooning = 0
         number_of_lane = 0
-        intersection_circle = 400
         v_intersected = {}
         x_intersected = {}
         xr_cons_intersected = {}
@@ -136,6 +147,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         x_platooning = {}
         xr_cons_platooning = {}
         x_pos_platoning = {}
+        intersection_circle = 400 #Determines intersected and platooning cars
     number_of_vehicle = 0
     detected_list = []
 
@@ -169,7 +181,6 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                             x[lane_number,vehicle_index] = traci.vehicle.getDistance(vehicle_on_lane) #odyometer for traveled distance
                             xr_cons[lane_number,vehicle_index] = calculate_desired_route(vehicle_on_lane) #Take Xr
                         else:
-                            #TO DO CHECK: Test this because optimization algorithms are not prepared according to first car can be in platooning cars
                             if(vehicle_index==1) and (traci.vehicle.getLanePosition(vehicle_on_lane)>intersection_circle):
                                 intersected_list.append(vehicle_on_lane)
                                 v_intersected[lane_number,vehicle_index] = traci.vehicle.getSpeed(vehicle_on_lane) #Take v0
@@ -221,7 +232,6 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
             else:
                 intersected_information.extend([number_of_lane, number_of_vehicle_intersected, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, parameters, intersected_list])
                 platooning_information.extend([number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning, parameters, platooning_list])
-                #admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num)
                 result, ids_for_result = consensus_admm_algorithm(intersected_information,platooning_information, map_to_lane, map_to_vehicle_num, length_of_lanes)
                 set_dist_acceleration(number_of_lane, number_of_vehicle, detected_list, result, ids_for_result, step)
 
@@ -252,3 +262,4 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         vehicle_list_in_scenario = traci.vehicle.getIDList()
         number_of_lane = 0
     pass
+#DESC OPTIMIZATION: END

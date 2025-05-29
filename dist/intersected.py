@@ -83,9 +83,10 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
         else:
             pass
 
+    #SHOULD BE CHECKED
     #TO DO: x[car_index, 1] does not mean intersection, so maybe we can put intersection circle condition
-    if(RHO!=0):
-        constraints.append(((x[car_index, 1]-x_input[(car_index, 1)])/v_input[(car_index, 1)] - z + u)<=2)
+    # if(RHO!=0):
+    #     constraints.append(((x[car_index, 1]-x_input[(car_index, 1)])/v_input[(car_index, 1)] - z + u)<=2)
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(car_index, 1)] != 0:
@@ -96,20 +97,6 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     if xr_cons[(car_index, 1)] != 0:
         constraints.append(a[car_index, 1] >= alfa)  # a >= alfa (minimum acceleration)
         constraints.append(a[car_index, 1] <= alfa_prime)  # a <= alfa_prime (maximum acceleration)
-
-    #test
-    # for i in range(0, len(constraints)):
-    #     print(constraints[i])
-
-    # Objective function
-    # objective = cp.Minimize(
-    # cp.sum([
-    #     xr_cons[(i, 1)] - x[i, 1] + gamma * cp.abs(v[i, 1] - v_input[(i, 1)])
-    #     + (100000000000 / 2) * cp.square((x[i, 1]-x_input[(i, 1)])/v_input[(i, 1)] - z + u) #TO DO: Not sure about brake for most close to intersection
-    #     for i in range(car_index, car_index + 1)
-    #     if xr_cons[(i, 1)] != 0
-    # ])
-    # )
 
     objective = cp.Minimize(
         cp.sum([
@@ -152,7 +139,6 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     #print("Distance: " + str(distance))
 
     #if local_v_flag == True:
-    #local_v = (x[(car_index, 1)].value-x_input[(car_index, 1)])/v[(car_index, 1)].value #local_v is time to intersection
     local_v = (F - x_input[(car_index, 1)]) / v[(car_index, 1)].value
 
     return result, local_v

@@ -19,15 +19,33 @@ from report_lib import parse_col, parse_fuel, create_report
 from TCs import uncontrolled_case_TC1, sumocontrolled_case_TC1, sumocontrolled_case_TC1_row, uncontrolled_case_TC2, sumocontrolled_case_TC2, sumocontrolled_case_TC2_row, uncontrolled_case_TC3, sumocontrolled_case_TC3, sumocontrolled_case_TC3_row, uncontrolled_case_TC4, sumocontrolled_case_TC4, sumocontrolled_case_TC4_row, uncontrolled_case_TC5, sumocontrolled_case_TC5, sumocontrolled_case_TC5_row, uncontrolled_case_TC5_TL
 from TCs_dist import uncontrolled_case_TC1_dist, sumocontrolled_case_TC1_dist, sumocontrolled_case_TC1_row_dist
 
+#DESC Conf: Panel for configurations
 LOGGER_ACTIVE = False
 OPTIMIZATION_ACTIVE = True #For use optimization in the intersection
 SUMO_ACTIVE = True
 MAPCREATION_ACTIVE = True #Creating the generation of map according to raw_intersection_num,column_intersection_num,edge_len,detector_pos
-MAPGENERATION_ACTIVE = True #Manhattan generation usage
+MAPGENERATION_ACTIVE = False #Manhattan generation usage
 ADDMANUALVEHICLE_ACTIVE = False #Adding to new vehicle for present scenario 
 ROUTECREATION_ACTIVE = False #Creating the generation of route file
 TL = False #Adding Traffic_Lights
 
+def set_parameters(parameters):
+    #parameters
+    t = 1
+    max_speed = 90
+    lower_acc = -7
+    upper_acc = 7 #If you do this as 4, there is crash on our scenario test with too much accelaration
+    speed_loc_fac = 0.49
+    reaction_t = 1
+    safety_distance = 2.5
+    vehicle_length = 4
+
+    parameters = [t, max_speed, lower_acc, upper_acc, speed_loc_fac, reaction_t, safety_distance, vehicle_length]
+    #print(parameters)
+    return parameters
+#DESC Conf: END
+
+## DESC LOGGER: To export detail log file 
 if(LOGGER_ACTIVE==True):
     class StreamToLogger:
         def __init__(self, logger, log_level=logging.INFO):
@@ -48,8 +66,9 @@ if(LOGGER_ACTIVE==True):
 
     # Redirect stdout to logging
     sys.stdout = StreamToLogger(logger, logging.INFO)
+## DESC LOGGER: END
 
-# we need to import python modules from the $SUMO_HOME/tools directory
+# DESC SUMO: we need to import python modules from the $SUMO_HOME/tools directory
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
     sys.path.append(tools)
@@ -58,7 +77,9 @@ else:
 
 from sumolib import checkBinary  # noqa
 import traci  # noqa
+# DESC SUMO: END
 
+# DESC RUN: Creating communication with simulator via TraCI
 def run(induction_loop_number,edge_len,parameters):
     """execute the TraCI control loop"""
     step = 0
@@ -98,29 +119,15 @@ def run(induction_loop_number,edge_len,parameters):
         step += 1
     traci.close()
     sys.stdout.flush()
+# DESC RUN: END
 
-
+# DESC Main: Main part 
 def get_options():
     optParser = optparse.OptionParser()
     optParser.add_option("--nogui", action="store_true",
                          default=False, help="run the commandline version of sumo")
     options, args = optParser.parse_args()
     return options
-
-def set_parameters(parameters):
-    #parameters
-    t = 1
-    max_speed = 90
-    lower_acc = -7
-    upper_acc = 7 #If you do this as 4, there is crash on our scenario test with too much accelaration
-    speed_loc_fac = 0.49
-    reaction_t = 1
-    safety_distance = 2.5
-    vehicle_length = 4
-
-    parameters = [t, max_speed, lower_acc, upper_acc, speed_loc_fac, reaction_t, safety_distance, vehicle_length]
-    #print(parameters)
-    return parameters
 
 # this is the main entry point of this script
 if __name__ == "__main__":
@@ -168,7 +175,5 @@ if __name__ == "__main__":
     parameters = []
     parameters = set_parameters(parameters)
     run(node_num,edge_len,parameters)
-
-    #parse_col()
-    #parse_fuel()
     create_report(parameters)
+# DESC Main: END 
