@@ -140,8 +140,8 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     if(MAPCREATION_ACTIVE==True):
-        raw_intersection_num = 1 #intersection number for x line (parametric)
-        column_intersection_num = 1 #intersection number for y line (parametric)
+        raw_intersection_num = 3 #intersection number for x line (parametric)
+        column_intersection_num = 3 #intersection number for y line (parametric)
         edge_len = 500 #the length of edge (parametric)
         detector_pos = 12 #detector position (parametric)
         create_map(raw_intersection_num,column_intersection_num,edge_len,detector_pos, TL)
@@ -154,8 +154,8 @@ if __name__ == "__main__":
             os.system("python3 tools/randomTrips.py -n data/cross.nettest.xml -e 50 --route-file data/cross.routest.xml --validate ")
 
     elif(MAPGENERATION_ACTIVE==True):
-        raw_intersection_num = 1
-        column_intersection_num = 1
+        raw_intersection_num = 3
+        column_intersection_num = 3
         edge_len = 500
         network_file_creation(raw_intersection_num,column_intersection_num,edge_len)
     else:
