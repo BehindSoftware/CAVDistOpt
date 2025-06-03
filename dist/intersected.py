@@ -51,42 +51,15 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
         if value != 0 and i==car_index:
             constraints.append(x[i, 1] == 0.5 * a[i, 1] * t**2 + v_input[(i, 1)] * t + x_input[(i, 1)])
 
+    epsilon = 1e-3  # small positive number
+
     # v constraints
     for (i, j), value in xr_cons.items():
         if value != 0 and i==car_index:
             constraints.append(v[i, 1] == a[i, 1] * t + v_input[(i, 1)])
-
-    #TO DO: Just think the case for 1 and 4 lanes, it is not in neighbor but it effects to intersection
-    # Lane crossing constraints (SHORT INFORMATION: There is no neighbor input data, just variable for safety)
-    if(number_of_vehicle==2):
-        if(x_pos[car_index,1]<F and x_pos[car_index+1,1]<F): #Checks this is the first intersection for cars, if not m.F will be increased because of usage distance travelled X^t+1
-            if x_pos[(car_index, 1)] >= F - epsilon_prime and x_pos[(car_index+1, 1)] >= F - epsilon_prime: # Is it enough close to the intersection, epsilon is arbitrary
-                check_for_will_pass_inters = x_pos[car_index,1]+v_input[car_index,1]-F
-                check_for_will_pass_inters_lane2 = x_pos[car_index+1,1]+v_input[car_index+1,1]-7-F
-                local_v_flag = True
-                if(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2<0): #This checks for absolute between F and X^t+1
-                    constraints.append((F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
-                elif(check_for_will_pass_inters>0 and check_for_will_pass_inters_lane2<0):
-                    constraints.append((x[car_index,1]-F)+(F-x[car_index+1,1])>=(lv+D))
-                elif(check_for_will_pass_inters<0 and check_for_will_pass_inters_lane2>0):
-                    constraints.append((F-x[car_index,1])+(x[car_index+1,1]-F)>=(lv+D))
-                else:
-                    constraints.append((x[car_index,1]-F)+(x[car_index+1,1]-F)>=(lv+D))
-        elif(x_input[car_index,1]>F and x_input[car_index+1,1]<F):
-            constraints.append ((2*F-x[car_index,1])+(F-x[car_index+1,1])>=(lv+D))
-        elif(x_input[car_index,1]<F and x_input[car_index+1,1]>F):
-            constraints.append ((F-x[car_index,1])+(2*F-x[car_index+1,1])>=(lv+D))
-        elif(x_input[car_index,1]>F and x_input[car_index+1,1]>F):
-            constraints.append ((2*F-x[car_index,1])+(2*F-x[car_index+1,1])>=(lv+D))
-        elif(x_input[car_index,1]>2*F and x_input[car_index+1,1]>2*F):
-            constraints.append ((3*F-x[car_index,1])+(3*F-x[car_index+1,1])>=(lv+D))
-        else:
-            pass
-
-    #SHOULD BE CHECKED
-    #TO DO: x[car_index, 1] does not mean intersection, so maybe we can put intersection circle condition
-    # if(RHO!=0):
-    #     constraints.append(((x[car_index, 1]-x_input[(car_index, 1)])/v_input[(car_index, 1)] - z + u)<=2)
+            constraints.append(v[i, 1] >= epsilon) #For not divide to 0 because of cvxpy
+            #Hard Constraint
+            constraints.append(((F-x_input[(car_index, 1)])* cp.inv_pos(v[i, 1]))>=z)
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(car_index, 1)] != 0:
@@ -101,8 +74,8 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     objective = cp.Minimize(
         cp.sum([
             (xr_cons[(i, 1)] - x[i, 1]) +
-            gamma * cp.abs(v[i, 1] - v_input[(i, 1)]) +
-            (RHO / 2) * ((F - x_input[(i, 1)]) * cp.inv_pos(v[i, 1]) - z + u)
+            gamma * cp.abs(v[i, 1] - v_input[(i, 1)]) 
+            #+ (RHO / 2) * ((F - x_input[(i, 1)]) * cp.inv_pos(v[i, 1]) - z + u) #Soft Constraint is removed because of non-feasibility/un-bound
             for i in range(car_index, car_index + 1)
             if xr_cons.get((i, 1), 0) != 0
         ])
@@ -113,13 +86,22 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     # Problem
     problem = cp.Problem(objective, constraints)
-    problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)
+
+    if problem.is_dqcp():
+        problem.solve(solver=cp.GUROBI, qcp=True)
+    else:
+        try:
+            problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)
+        except cp.error.DCPError as e:
+            print("DCP Error:", e)
+            print("DCP-compliant:", problem.is_dcp())
+            return result, local_v
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
-    print(v[(car_index, 1)].value)
-    print(x[(car_index, 1)].value)
-    print(a[(car_index, 1)].value)
+    # print(v[(car_index, 1)].value)
+    # print(x[(car_index, 1)].value)
+    # print(a[(car_index, 1)].value)
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:

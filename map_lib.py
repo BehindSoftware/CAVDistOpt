@@ -454,8 +454,8 @@ def create_detectors(intersection_ID,detector_pos):
         for node in range(1,intersection_ID*5+1):
             if(node%5!=0):
                 #freq: The aggregation period the values the detector collects shall be summed up
-                print('<inductionLoop id="{}" lane="{}_0" pos="{}" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>'.format(detector_ID,lane_number+1,detector_pos), file=detectors)
-                print('<inductionLoop id="{}" lane="{}_0" pos="{}" freq="1" length="485" file="../reports/cross.out" friendlyPos="x"/>'.format(detector_ID+4,(lane_number+1)%100,detector_pos), file=detectors)
+                print('<inductionLoop id="{}" lane="{}_0" pos="{}" freq="1" length="490" file="../reports/cross.out" friendlyPos="x"/>'.format(detector_ID,lane_number+1,detector_pos), file=detectors)
+                print('<inductionLoop id="{}" lane="{}_0" pos="{}" freq="1" length="490" file="../reports/cross.out" friendlyPos="x"/>'.format(detector_ID+4,(lane_number+1)%100,detector_pos), file=detectors)
                 detector_ID+= 1
             else:
                 detector_ID = detector_ID + 4

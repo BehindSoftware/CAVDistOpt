@@ -73,6 +73,7 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
             if (number_of_lane,1) in xr_dict and xr_dict[(number_of_lane, 1)] is not None and (number_of_lane, 1) in xr_cons: #Check for whether there is front car in the intersection
                 if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 1)] != 0:
                     #TO DO: test this for sure about distances_dict
+                    print(distances_dict[(number_of_lane, 1)])
                     constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 1] >= lv + D + R * v[number_of_lane, 1]]
                     local_v_flag = True
                 else:
@@ -118,7 +119,9 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
 
     # Problem
     problem = cp.Problem(objective, constraints)
-    problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)
+    print("DCP-compliant:", problem.is_dcp())
+    if(problem.is_dcp()==True):
+        problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False, nonconvex=True)
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
@@ -141,8 +144,8 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
             distance=x[(number_of_lane, car_index)].value
             result=a[(number_of_lane, car_index)].value
 
-    if local_v_flag == True:
-        local_v = v[(number_of_lane, car_index)].value
+    #if local_v_flag == True:
+    local_v = v[(number_of_lane, car_index)].value
 
     return result, local_v
 

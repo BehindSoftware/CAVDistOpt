@@ -8,9 +8,9 @@ from dist.simulator import *
 WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 
 MAX_ITER = 5
-RHO = 5.0
+RHO = 1
 TOLERANCE = 7.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len))
-TIME_GAP = 3.0
+TIME_GAP = 0.8
 #DESC CONF: END
 
 #DESC CONV CRIT: Function to check convergence
@@ -181,7 +181,7 @@ def update_dual(z, u, x):
 
     for lane_number in range(0, 5): # it is constant lane 0= intersection, lane 1,2,3,4 lanes
         for idx in range(0,len(u[lane_number])):
-            u_updated[lane_number][idx] = u[lane_number][idx] + RHO * (x[lane_number][idx] - z[lane_number][idx])
+            u_updated[lane_number][idx] = u[lane_number][idx] + (x[lane_number][idx] - z[lane_number][idx]) * RHO
 
     return u_updated
 #DESC UPDATE DUAL: END
