@@ -35,7 +35,7 @@ def set_parameters(parameters):
     max_speed = 60
     lower_acc = -3
     upper_acc = 3 #If you do this as 4, there is crash on our scenario test with too much accelaration
-    speed_loc_fac = 0.25
+    speed_loc_fac = 0.3
     reaction_t = 1
     safety_distance = 2
     vehicle_length = 4
@@ -113,10 +113,10 @@ def run(induction_loop_number,edge_len,parameters):
             #uncontrolled_case_TC4(step)
             #uncontrolled_case_TC5(step)
             #uncontrolled_case_TC5_TL(step)
-            #uncontrolled_case_TC1_dist(step)
+            uncontrolled_case_TC1_dist(step)
             #uncontrolled_case_TC2_dist(step)
             #uncontrolled_case_TC3_dist(step)
-            uncontrolled_case_TC4_dist(step)
+            #uncontrolled_case_TC4_dist(step)
             pass
 
         step += 1
@@ -143,8 +143,8 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     if(MAPCREATION_ACTIVE==True):
-        raw_intersection_num = 3 #intersection number for x line (parametric)
-        column_intersection_num = 3 #intersection number for y line (parametric)
+        raw_intersection_num = 1 #intersection number for x line (parametric)
+        column_intersection_num = 1 #intersection number for y line (parametric)
         edge_len = 500 #the length of edge (parametric)
         detector_pos = 2 #detector position (parametric)
         create_map(raw_intersection_num,column_intersection_num,edge_len,detector_pos, TL)
@@ -171,11 +171,11 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     if(OPTIMIZATION_ACTIVE==True):
-    #     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-    #                          "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--emergency-insert", "--collision.action=none", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100"])
-    # else:
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--collision.check-junctions", "--emergency-insert", "--collision.action=remove", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100"])
+                             "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--emergency-insert", "--collision.action=none", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100", "--collision.mingap-factor=0"])
+    else:
+        traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+                             "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--collision.check-junctions", "--emergency-insert", "--collision.action=remove", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100", "--collision.mingap-factor=0"])
     
     node_num = raw_intersection_num*column_intersection_num
 

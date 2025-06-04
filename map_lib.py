@@ -6,12 +6,12 @@ def case_1():
 
     new_item = ET.SubElement(root, "vType")
     new_item.attrib["id"] = "test"
-    new_item.attrib["jmIgnoreFoeProb"] = "1"
-    new_item.attrib["jmIgnoreFoeSpeed"] = "300"
-    new_item.attrib["jmTimegapMinor"] = "0"
-    new_item.attrib["jmIgnoreJunctionFoeProb"] = "1"
-    new_item.attrib["jmCrossingGap"] = "0"
-    new_item.attrib["sigma"] = "1" #collision has been provided with this on the junction
+    # new_item.attrib["jmIgnoreFoeProb"] = "1"
+    # new_item.attrib["jmIgnoreFoeSpeed"] = "300"
+    # new_item.attrib["jmTimegapMinor"] = "0"
+    # new_item.attrib["jmIgnoreJunctionFoeProb"] = "1"
+    # new_item.attrib["jmCrossingGap"] = "0"
+    # new_item.attrib["sigma"] = "0" #collision has been provided with this on the junction
     #new_item.attrib["tau"] = "0.1" #changed the collisions, it increased but not junction only on the way
     new_item.attrib["guiShape"] = "passenger/van"
 
@@ -125,12 +125,12 @@ def case_1_twosec():
 
     new_item = ET.SubElement(root, "vType")
     new_item.attrib["id"] = "test"
-    new_item.attrib["jmIgnoreFoeProb"] = "1"
-    new_item.attrib["jmIgnoreFoeSpeed"] = "300"
-    new_item.attrib["jmTimegapMinor"] = "0"
-    new_item.attrib["jmIgnoreJunctionFoeProb"] = "1"
-    new_item.attrib["jmCrossingGap"] = "0"
-    new_item.attrib["sigma"] = "1" #collision has been provided with this on the junction
+    # new_item.attrib["jmIgnoreFoeProb"] = "1"
+    # new_item.attrib["jmIgnoreFoeSpeed"] = "300"
+    # new_item.attrib["jmTimegapMinor"] = "0"
+    # new_item.attrib["jmIgnoreJunctionFoeProb"] = "1"
+    # new_item.attrib["jmCrossingGap"] = "0"
+    # new_item.attrib["sigma"] = "0" #collision has been provided with this on the junction
     #new_item.attrib["tau"] = "0.1" #changed the collisions, it increased but not junction only on the way
     new_item.attrib["guiShape"] = "passenger/van"
 

@@ -8,9 +8,9 @@ from dist.simulator import *
 WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 
 MAX_ITER = 5
-RHO = 1
-TOLERANCE = 7.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len))
-TIME_GAP = 0.8
+RHO = 1 #Infeasible when it is higher than 2.5 in TC4
+TOLERANCE = 2.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len))
+TIME_GAP = 2
 #DESC CONF: END
 
 #DESC CONV CRIT: Function to check convergence

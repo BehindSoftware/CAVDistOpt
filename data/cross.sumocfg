@@ -4,7 +4,7 @@
 
     <input>
         <net-file value="cross.nettest.xml"/>
-        <route-files value="cross.routest_distTC4.xml"/>
+        <route-files value="cross.routest_distTC1.xml"/>
         <additional-files value="cross.dettest.xml"/>
     </input>
 
