@@ -187,8 +187,8 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
                     if vehicle_on_lane in vehicle_list_in_scenario: #The car is still in the simulation
                         #print("Vehicle on lane {}:".format(lane_number) + vehicle_on_lane)
                         detected_list.append(vehicle_on_lane) #For holding vehicle number
-                        # if(traci.vehicle.getLanePosition(vehicle_on_lane)>intersection_circle):
-                        #     return
+                        if(traci.vehicle.getLanePosition(vehicle_on_lane)>intersection_circle):
+                            return
                         traci.vehicle.setSpeedMode(vehicle_on_lane,32) #Take control about speed (not sure 0 or 32 but not 31)
                         traci.vehicle.setLaneChangeMode(vehicle_on_lane, 0) #Take control about lanechange
                         if(DIST_OPT==False):

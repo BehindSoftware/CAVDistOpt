@@ -8,8 +8,8 @@ from dist.simulator import *
 WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 
 MAX_ITER = 5
-RHO = 1 #Infeasible when it is higher than 2.5 in TC4
-TOLERANCE = 2.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len))
+RHO = 1 #Infeasible when it is higher than 2.5 in TC4 -> Reverse relation with tolerance if decrease to tolerance you need to increase RHO
+TOLERANCE = 2.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len)) -> If tolerance is increasing from 2.5, there are collisions
 TIME_GAP = 2
 #DESC CONF: END
 

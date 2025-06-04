@@ -32,10 +32,10 @@ TL = False #Adding Traffic_Lights
 def set_parameters(parameters):
     #parameters
     t = 1
-    max_speed = 60
-    lower_acc = -3
-    upper_acc = 3 #If you do this as 4, there is crash on our scenario test with too much accelaration
-    speed_loc_fac = 0.3
+    max_speed = 60 #-> 60 90 test it time decrease fuel increase
+    lower_acc = -5
+    upper_acc = 5 #If you do this as 4, there is crash on our scenario test with too much accelaration
+    speed_loc_fac = 0.1 #-> 0.1 0.2 0.3 test it fuel decrease time increase
     reaction_t = 1
     safety_distance = 2
     vehicle_length = 4
@@ -171,9 +171,9 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     if(OPTIMIZATION_ACTIVE==True):
-        traci.start([sumoBinary, "-c", "data/cross.sumocfg",
-                             "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--emergency-insert", "--collision.action=none", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100", "--collision.mingap-factor=0"])
-    else:
+    #     traci.start([sumoBinary, "-c", "data/cross.sumocfg",
+    #                          "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--emergency-insert", "--collision.action=none", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100", "--collision.mingap-factor=0"])
+    # else:
         traci.start([sumoBinary, "-c", "data/cross.sumocfg",
                              "--tripinfo-output", "reports/tripinfo.xml", "--netstate-dump=reports/testdump.xml", "--collision.check-junctions", "--emergency-insert", "--collision.action=remove", "--emission-output=reports/emissions.xml", "--full-output=reports/fulloutput.xml", "--emissions.volumetric-fuel", "--log=log.txt" , "--emergencydecel.warning-threshold=100", "--collision.mingap-factor=0"])
     
