@@ -113,10 +113,10 @@ def run(induction_loop_number,edge_len,parameters):
             #uncontrolled_case_TC4(step)
             #uncontrolled_case_TC5(step)
             #uncontrolled_case_TC5_TL(step)
-            uncontrolled_case_TC1_dist(step)
+            #uncontrolled_case_TC1_dist(step)
             #uncontrolled_case_TC2_dist(step)
             #uncontrolled_case_TC3_dist(step)
-            #uncontrolled_case_TC4_dist(step)
+            uncontrolled_case_TC4_dist(step)
             pass
 
         step += 1
@@ -143,8 +143,8 @@ if __name__ == "__main__":
         sumoBinary = checkBinary('sumo-gui')
 
     if(MAPCREATION_ACTIVE==True):
-        raw_intersection_num = 1 #intersection number for x line (parametric)
-        column_intersection_num = 1 #intersection number for y line (parametric)
+        raw_intersection_num = 3 #intersection number for x line (parametric)
+        column_intersection_num = 3 #intersection number for y line (parametric)
         edge_len = 500 #the length of edge (parametric)
         detector_pos = 2 #detector position (parametric)
         create_map(raw_intersection_num,column_intersection_num,edge_len,detector_pos, TL)

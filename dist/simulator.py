@@ -76,6 +76,10 @@ def set_optimized_acceleration(number_of_lane, number_of_vehicle, detected_list,
                 calculated_speed = traci.vehicle.getSpeed(vehicle)+acceleration[map_to_lane[vehicle],map_to_vehicle_num[vehicle]]*1 #t=1
                 if(calculated_speed>=0):
                     traci.vehicle.setSpeed(vehicle,calculated_speed)
+                else:
+                    traci.vehicle.setSpeed(j, -1)
+                    traci.vehicle.setSpeedMode(vehicle, 31)
+                    traci.vehicle.setLaneChangeMode(vehicle, 512)
                 # #FOR TEST
                 # if(step==8):
                 #     traci.vehicle.setSpeed('3005',22.22)
@@ -102,6 +106,7 @@ def set_dist_acceleration(number_of_lane, detected_list, result, ids_for_result,
                             f"Acceleration: {result[lane_index][vehicle_index]:.2f} m/s² | New speed: {calculated_speed:.2f} m/s")
                     traci.vehicle.setSpeed(vehicle,calculated_speed)
                 else:
+                    traci.vehicle.setSpeed(j, -1)
                     traci.vehicle.setSpeedMode(vehicle, 31)
                     traci.vehicle.setLaneChangeMode(vehicle, 512)
 
@@ -121,10 +126,10 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         #uncontrolled_case_TC3(step)
         #uncontrolled_case_TC4(step)
         #uncontrolled_case_TC5(step)
-        uncontrolled_case_TC1_dist(step)
+        #uncontrolled_case_TC1_dist(step)
         #uncontrolled_case_TC2_dist(step)
         #uncontrolled_case_TC3_dist(step)
-        #uncontrolled_case_TC4_dist(step)
+        uncontrolled_case_TC4_dist(step)
         print("Optimized case has been activated.")
         return
 
@@ -174,7 +179,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
             number_of_vehicle_platooning = 0
             thereisflag = False
             vehicle_index = 1 #Should be reset for each lane
-            detector_cars = [item[0] for item in traci.inductionloop.getVehicleData(str(lane_number+(intersection_number*4)))]
+            detector_cars = [item[0] for item in traci.inductionloop.getVehicleData(str(lane_number+(intersection_number*8)))]
             detector_cars = get_sorted_vehicle_positions(detector_cars, vehicle_list_in_scenario)
             if len(detector_cars) > 0:
                 print("Sorted detector cars:",detector_cars) 

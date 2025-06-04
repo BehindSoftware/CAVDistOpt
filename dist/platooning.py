@@ -68,20 +68,17 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
             constraints.append(v[number_of_lane, j] == a[number_of_lane, j] * t + v_input[(number_of_lane, j)])
 
     #Safe distance constraints (we need to the first car values in here)
-    if number_of_vehicle > 1: #if we have 1 car, we need to check with intersected
+    if number_of_vehicle > 1 or car_index==1: #if we have 1 car, we need to check with intersected
+        print("X")
         if car_index==1: #Means the car which need the first car information from intersected list
+            print("Y")
             if (number_of_lane,1) in xr_dict and xr_dict[(number_of_lane, 1)] is not None and (number_of_lane, 1) in xr_cons: #Check for whether there is front car in the intersection
+                print("Z")
                 if xr_dict[(number_of_lane, 1)] != 0 and xr_cons[(number_of_lane, 1)] != 0:
-                    #TO DO: test this for sure about distances_dict
                     print(distances_dict[(number_of_lane, 1)])
                     constraints += [distances_dict[(number_of_lane, 1)] - x[number_of_lane, 1] >= lv + D + R * v[number_of_lane, 1]]
                     local_v_flag = True
-                else:
-                    pass
-                    #Infeasible solution
-            else: #The intersected cars in platooning list
-                constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
-                local_v_flag = True
+                    print("T")
         else: #other lane cars
             if xr_cons[(number_of_lane, car_index)] != 0 and xr_cons[(number_of_lane, car_index-1)] != 0:    
                 constraints.append(x[number_of_lane, car_index - 1] - x[number_of_lane, car_index] >= lv + D + R * v[number_of_lane, car_index])
