@@ -30,6 +30,7 @@ def uncontrolled_case_TC1_dist(step):
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 32)
             traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
+    return len(vehicle_list)
 
 def sumocontrolled_case_TC1_dist(step):
     print("Sumocontrolled TC-1")
@@ -56,6 +57,7 @@ def sumocontrolled_case_TC1_dist(step):
             traci.vehicle.setSpeedMode(vehicle["id"], 24)
             traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
     
+    return len(vehicle_list)
 
 def sumocontrolled_case_TC1_row_dist(step):
     print("Sumocontrolled TC-1 row")
@@ -81,6 +83,8 @@ def sumocontrolled_case_TC1_row_dist(step):
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 31)
             traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
+
+    return len(vehicle_list)
 
 def uncontrolled_case_TC2_dist(step):
     print("Uncontrolled TC-2")
@@ -124,6 +128,8 @@ def uncontrolled_case_TC2_dist(step):
             traci.vehicle.setSpeedMode(vehicle["id"], 32)
             traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
 
+    return len(vehicle_list)
+
 def uncontrolled_case_TC3_dist(step):
     print("Uncontrolled TC-3")
 
@@ -157,6 +163,8 @@ def uncontrolled_case_TC3_dist(step):
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 32)
             traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
+
+    return len(vehicle_list)
 
 def uncontrolled_case_TC4_dist(step):
     print("Uncontrolled TC-4")
@@ -210,3 +218,5 @@ def uncontrolled_case_TC4_dist(step):
             traci.vehicle.setSpeed(vehicle["id"], vehicle["speed"])
             traci.vehicle.setSpeedMode(vehicle["id"], 32)
             traci.vehicle.setLaneChangeMode(vehicle["id"], 512)
+
+    return len(vehicle_list)

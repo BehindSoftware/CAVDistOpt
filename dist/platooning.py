@@ -13,7 +13,7 @@ import numpy as np
 #xr_dict is xr_cons value for intersected car
 #car_index is index for vehicle
 
-def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, parameters, z, u, distances_dict, xr_dict, car_index, RHO):
+def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input, xr_cons, parameters, z, u, distances_dict, xr_dict, car_index):
     #Constants
     t = parameters[0]                           #time scale: t is the measurement frequency, it can be 1 second for now.
     epsilon_prime = parameters[1] * 1000 / 3600 #km/h to m/s conversion for desired velocity
@@ -24,6 +24,7 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
     D = parameters[6]                           #Safety Distance (m)
     lv = parameters[7]                          #Length of vehicle (m)
     F = 495
+    RHO = parameters[16]
 
     #constraints
     constraints = []

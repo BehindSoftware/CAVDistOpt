@@ -116,7 +116,7 @@ def set_dist_acceleration(number_of_lane, detected_list, result, ids_for_result,
 #DESC SET_OPT_FOR_DIST : END
 
 #DESC OPTIMIZATION: Optimization phase is calling for each step
-def optimized_case(step,induction_loop_number,edge_len,parameters):
+def optimized_case(step,parameters):
     #Not optimization for add vehicles to scenario
     if(step<6): #8 for uncontrolled case (Clarify value according to catch cars however they are created)
         #uncontrolled_case(step)
@@ -127,9 +127,9 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         #uncontrolled_case_TC4(step)
         #uncontrolled_case_TC5(step)
         #uncontrolled_case_TC1_dist(step)
-        #uncontrolled_case_TC2_dist(step)
+        parameters.append(uncontrolled_case_TC2_dist(step)) #Vehicle numbers
         #uncontrolled_case_TC3_dist(step)
-        uncontrolled_case_TC4_dist(step)
+        #uncontrolled_case_TC4_dist(step)
         print("Optimized case has been activated.")
         return
 
@@ -172,7 +172,7 @@ def optimized_case(step,induction_loop_number,edge_len,parameters):
         traci.vehicle.setLaneChangeMode(j, 512) #Take control about lanechange
 
     #Gathering information step 
-    for intersection_number in range(0,(induction_loop_number)): #induction_loop_number(intersection_num) comes from map creation
+    for intersection_number in range(0,(parameters[12])): #parameters[12] comes from map creation
         #print("Intersection Number:{}".format(intersection_number))
         #each lane of an intersection
         for lane_number in range(1,5): #Lane 1,2,3,4 clockwise (***Lane designed as constant 4***)

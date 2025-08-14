@@ -7,14 +7,10 @@ from dist.simulator import *
 #DESC CONF: Consensus ADMM parameters
 WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 
-MAX_ITER = 5
-RHO = 1 #Infeasible when it is higher than 2.5 in TC4 -> Reverse relation with tolerance if decrease to tolerance you need to increase RHO
-TOLERANCE = 2.5 #Determine according to sensitivity (A car distance to other/intersection can be about 7.5(min gap+car_len)) -> If tolerance is increasing from 2.5, there are collisions
-TIME_GAP = 0.8
 #DESC CONF: END
 
 #DESC CONV CRIT: Function to check convergence
-def check_convergence(x, z_new, z_prev, length_of_lanes):
+def check_convergence(x, z_new, z_prev, length_of_lanes, TOLERANCE, RHO):
     """Convergence check based on primal and dual residuals."""
     # Initialize residuals
     primal_residual_sum = 0
@@ -138,7 +134,7 @@ def sort_lanes_by_first_vehicle_position(x):
 #DESC SORT: END
 
 #DESC UPDATE CONSENSUS:
-def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
+def update_consensus(z, u, x, cars_in_lanes, length_of_lanes, TIME_GAP, RHO):
 
     #Create same structure with z
     z_updated = np.copy(z)
@@ -175,7 +171,7 @@ def update_consensus(z, u, x, cars_in_lanes, length_of_lanes):
 #DESC UPDATE CONSENSUS: END
 
 #DESC UPDATE DUAL:
-def update_dual(z, u, x):
+def update_dual(z, u, x, RHO):
 
     u_updated = np.copy(u)
 
@@ -237,7 +233,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
     distances_dict = {}
     xr_dict = {}
 
-    for iteration in range(MAX_ITER):
+    for iteration in range(parameters_intersected[13]): # parameters_intersected[13] = MAX_ITER
 
         # Store previous values of consensus variables for dual residual calculation
         z_prev = np.copy(z)
@@ -261,7 +257,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                 if cars_in_lanes[laneID] != -1:
                     print("First car of LaneID:"+str(laneID)+ " Consensus_index:"+ str(consensus_idx))
                     lane_has_multiple_cars = number_of_vehicle > 1
-                    result[0][consensus_idx], x[0][consensus_idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[0][consensus_idx], u[0][consensus_idx], distances_dict, xr_dict, laneID, RHO) #if lane_has_multiple_cars else 0) #Intersected is hold in 0 index
+                    result[0][consensus_idx], x[0][consensus_idx] = intersected_optimization(number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle, parameters_intersected, z[0][consensus_idx], u[0][consensus_idx], distances_dict, xr_dict, laneID) #if lane_has_multiple_cars else 0) #Intersected is hold in 0 index
                     print("Accelaration:" + str(result[0][consensus_idx]) + "Local_v:" + str(x[0][consensus_idx]))
                     consensus_idx+=1
 
@@ -278,23 +274,23 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
                     #parsing_vehicle_data to take current car data
                     number_of_vehicle,v_vehicle, x_vehicle, xrcons_vehicle, xpos_vehicle = parsing_vehicle_data_platooning(laneID, number_of_vehicle, v_lane, x_lane, xr_lane, x_pos_lane, idx)
                     lane_has_multiple_cars = number_of_vehicle > 1
-                    result[laneID][consensus_idx], x[laneID][consensus_idx] = platooning_optimization(laneID, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[laneID][consensus_idx], u[laneID][consensus_idx], distances_dict, xr_dict, idx, RHO) #if lane_has_multiple_cars else 0)
+                    result[laneID][consensus_idx], x[laneID][consensus_idx] = platooning_optimization(laneID, number_of_vehicle, v_vehicle, x_vehicle, xrcons_vehicle, parameters_platooning, z[laneID][consensus_idx], u[laneID][consensus_idx], distances_dict, xr_dict, idx) #if lane_has_multiple_cars else 0)
                     print("Accelaration:" + str(result[laneID][consensus_idx]) + "Local_v:" + str(x[laneID][consensus_idx]))
                     consensus_idx-=1
         
         # Step 3: Consensus step
 
-        z = update_consensus(z, u, x, cars_in_lanes, length_of_lanes)
+        z = update_consensus(z, u, x, cars_in_lanes, length_of_lanes, parameters_intersected[14], parameters_intersected[16])
         print("updated z:" + str(z))
 
         # Step 4: Update dual variables
 
-        u = update_dual(z_prev, u, x)
+        u = update_dual(z_prev, u, x, parameters_intersected[16])
         print("updated u:" + str(u))
 
         # Step 5: Convergence check
 
-        if check_convergence(x, z, z_prev, length_of_lanes):
+        if check_convergence(x, z, z_prev, length_of_lanes, parameters_intersected[15], parameters_intersected[16]):
 
             print(f"Convergence reached after {iteration} iterations.")
             break

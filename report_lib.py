@@ -124,8 +124,8 @@ def create_report(parameters):
 
     worksheet['D2'] = col_num
 
-    parameter_titles = ["t", "max_speed", "lower_acc", "upper_acc", "speed-loc_fac", "reaction_t", "safety_distance", "vehicle_length"]
-    for i in range(2,9):
+    parameter_titles = ["t", "max_speed", "lower_acc", "upper_acc", "speed-loc_fac", "reaction_t", "safety_distance", "vehicle_length", "edge_len", "raw_intersection_num", "column_intersection_num", "detector_pos", "node_num", "MAX_ITER", "TIME_GAP", "TOLERANCE", "RHO"]
+    for i in range(2,19):
         worksheet.cell(row=i, column=5, value=parameter_titles[i-2])
         worksheet.cell(row=i, column=6, value=parameters[i-2])
 
