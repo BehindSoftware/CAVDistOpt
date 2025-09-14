@@ -146,19 +146,74 @@ def get_options():
 # this is the main entry point of this script
 if __name__ == "__main__":
     
-    t = [1]
-    max_speed = [90, 120, 180]
-    lower_acc = [-2, -3, -4]
-    upper_acc = [2, 3, 4]
-    speed_loc_fac = [0.1, 0.2, 0.3, 0.4]
-    reaction_t = [0.5, 1, 2]
-    safety_distance = [2, 5, 8]
-    vehicle_length = [3, 4, 5]
+    # t = [1]
+    # max_speed = [90, 120, 180]
+    # lower_acc = [-2, -3, -4]
+    # upper_acc = [2, 3, 4]
+    # speed_loc_fac = [0.1, 0.2, 0.3, 0.4]
+    # reaction_t = [0.5, 1, 2]
+    # safety_distance = [2, 5, 8]
+    # vehicle_length = [3, 4, 5]
+    # #node_num = raw_intersection_num*column_intersection_num
+    # MAX_ITER = [3, 5, 7]
+    # TIME_GAP = [0.8 , 2, 4]
+    # TOLERANCE = [0.5, 2.5, 7.5] 
+    # RHO = [0.5, 1.5, 2.5]
+
+    #Then try these:
+    # t = [1]
+    # max_speed = [90, 120, 180]
+    # lower_acc = [-1, -3]
+    # upper_acc = [1, 3]
+    # speed_loc_fac = [0.2, 0,4]
+    # reaction_t = [0.5, 1]
+    # safety_distance = [2, 5]
+    # vehicle_length = [4, 6]
     #node_num = raw_intersection_num*column_intersection_num
-    MAX_ITER = [3, 5, 7]
-    TIME_GAP = [0.8 , 2, 4]
-    TOLERANCE = [0.5, 2.5, 7.5] 
-    RHO = [0.5, 1.5, 2.5]
+    # MAX_ITER = [3, 6, 9]                         # ek: 1 (tek iter), 10 (daha çok iter)
+    # TIME_GAP = [0.8, 2.0, 4.0]                   # ek: 0.5 (çok agresif takip), 6 (çok temkinli)
+    # TOLERANCE = [0.5, 2.5, 7.5]                  # ek: 0.01 (sıkı), 15 (gevşek)
+    # RHO = [0.5, 1.5, 2.5, 10.0]                  # ek: 0.1 (zayıf cezalandırma), 10 (çok güçlü)
+
+    # t = [1]  # korunuyor (zaman adımı / horizon tekse yeterli)
+    # max_speed = [60, 90, 120, 180, 240]          # ek: 60 (düşük), 240 (aşırı/limit)
+    # lower_acc = [-6, -4, -3, -2, -1]             # ek: -6 (sert fren), -1 (hafif fren)
+    # upper_acc = [1, 2, 3, 4, 6]                  # ek: 1 (hafif hızlanma), 6 (agresif)
+    # speed_loc_fac = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0]  # ek: 0.0 (etkisiz), 0.5, 1.0 (maks)
+    # reaction_t = [0.2, 0.5, 1.0, 2.0, 3.0]       # ek: 0.2 (çok hızlı tepki), 3.0 (çok yavaş)
+    # safety_distance = [0, 2, 5, 8, 12]          # ek: 0 (henüz güvenlik yok), 12 (çok tedbirli)
+    # vehicle_length = [2, 3, 4, 5, 6]            # ek: 2 (küçük), 6 (uzun kamyon benzeri)
+    # MAX_ITER = [1, 3, 5, 7, 10]                 # ek: 1 (tek iter), 10 (daha çok iter)
+    # TIME_GAP = [0.5, 0.8, 2.0, 4.0, 6.0]        # ek: 0.5 (çok agresif takip), 6 (çok temkinli)
+    # TOLERANCE = [0.01, 0.5, 2.5, 7.5, 15.0]     # ek: 0.01 (sıkı), 15 (gevşek)
+    # RHO = [0.1, 0.5, 1.5, 2.5, 10.0]            # ek: 0.1 (zayıf cezalandırma), 10 (çok güçlü)
+
+    # t = [1]  # korunuyor (zaman adımı / horizon tekse yeterli)
+    # max_speed = [60, 90, 120, 180, 240]          # ek: 60 (düşük), 240 (aşırı/limit)
+    # lower_acc = [-6, -3, -1]                     # ek: -6 (sert fren), -1 (hafif fren)
+    # upper_acc = [1, 3, 6]                        # ek: 1 (hafif hızlanma), 6 (agresif)
+    # speed_loc_fac = [0.0, 0.2, 0.4, 0.5]         # ek: 0.0 (etkisiz), 0.5, 1.0 (maks)
+    # reaction_t = [0.2, 0.5, 1.0]                 # ek: 0.2 (çok hızlı tepki), 3.0 (çok yavaş)
+    # safety_distance = [0, 2, 5]                  # ek: 0 (henüz güvenlik yok), 12 (çok tedbirli)
+    # vehicle_length = [2, 4, 6]                   # ek: 2 (küçük), 6 (uzun kamyon benzeri)
+    # MAX_ITER = [3, 6, 9]                         # ek: 1 (tek iter), 10 (daha çok iter)
+    # TIME_GAP = [0.8, 2.0, 4.0]                   # ek: 0.5 (çok agresif takip), 6 (çok temkinli)
+    # TOLERANCE = [0.5, 2.5, 7.5]                  # ek: 0.01 (sıkı), 15 (gevşek)
+    # RHO = [0.5, 1.5, 2.5, 10.0]                  # ek: 0.1 (zayıf cezalandırma), 10 (çok güçlü)
+
+    #Best Parameters
+    t = [1]
+    max_speed = [90]
+    lower_acc = [-1]
+    upper_acc = [3]
+    speed_loc_fac = [0.2]
+    reaction_t = [0.5]
+    safety_distance = [2]
+    vehicle_length = [4]
+    MAX_ITER = [6]
+    TIME_GAP = [0.8]
+    TOLERANCE = [0.5] 
+    RHO = [0.5, 1.5, 2.5, 5, 7.5, 10]
     
     for param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12 in itertools.product(t, max_speed, lower_acc, upper_acc, speed_loc_fac, reaction_t, safety_distance, vehicle_length, MAX_ITER, TIME_GAP, TOLERANCE, RHO):
         #parameters = []

@@ -15,12 +15,9 @@ def parse_col():
     collision_number = 0
     
     for h in root.iter("collision"):
-        if h.attrib["type"] == "junction":
-            collision_number += 1
-            collision_element = ET.SubElement(root, "crash", type=str(h.attrib["type"]), collider=str(h.attrib["collider"]), victim=str(h.attrib["victim"]))
-            collision_element.tail= "    \n    "
-        else:
-            pass
+        collision_number += 1
+        collision_element = ET.SubElement(root, "crash", type=str(h.attrib["type"]), collider=str(h.attrib["collider"]), victim=str(h.attrib["victim"]))
+        collision_element.tail= "    \n    "
 
     tree.write("reports/summarized_report.xml")
 
