@@ -125,9 +125,9 @@ def run(parameters):
             #uncontrolled_case_TC5(step)
             #uncontrolled_case_TC5_TL(step)
             #uncontrolled_case_TC1_dist(step)
-            uncontrolled_case_TC2_dist(step)
+            #uncontrolled_case_TC2_dist(step)
             #uncontrolled_case_TC3_dist(step)
-            #uncontrolled_case_TC4_dist(step)
+            uncontrolled_case_TC4_dist(step)
             pass
 
         step += 1
@@ -204,16 +204,16 @@ if __name__ == "__main__":
     #Best Parameters
     t = [1]
     max_speed = [90]
-    lower_acc = [-1]
+    lower_acc = [-3]
     upper_acc = [3]
-    speed_loc_fac = [0.2]
-    reaction_t = [0.5]
-    safety_distance = [2]
+    speed_loc_fac = [0.2] 
+    reaction_t = [1]
+    safety_distance = [5]
     vehicle_length = [4]
-    MAX_ITER = [6]
-    TIME_GAP = [0.8]
+    MAX_ITER = [4]
+    TIME_GAP = [2]
     TOLERANCE = [0.5] 
-    RHO = [0.5, 1.5, 2.5, 5, 7.5, 10]
+    RHO = [0.5]
     
     for param1, param2, param3, param4, param5, param6, param7, param8, param9, param10, param11, param12 in itertools.product(t, max_speed, lower_acc, upper_acc, speed_loc_fac, reaction_t, safety_distance, vehicle_length, MAX_ITER, TIME_GAP, TOLERANCE, RHO):
         #parameters = []

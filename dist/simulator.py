@@ -1,4 +1,5 @@
 import traci
+import time
 
 DIST_OPT=True
 #from veh_opt import get_parameters_on_the_intersection, create_the_inputs, set_optimized_acceleration
@@ -256,7 +257,13 @@ def optimized_case(step,parameters):
             number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning = create_the_inputs(number_of_lane, number_of_vehicle_platooning, v_platooning, x_platooning, xr_cons_platooning, x_pos_platoning)
         if(number_of_vehicle>0):
             if(DIST_OPT==False):
+                start = time.perf_counter()
                 acceleration = get_optimized_acceleration(number_of_lane, number_of_vehicle, v, x, xr_cons, x_pos, parameters)
+                end = time.perf_counter()
+                elapsed_ms = (end - start) * 1000  # milisaniye
+                with open("süreler_cent.txt", "a", encoding="utf-8") as f:
+                    f.write(f"süresi: {elapsed_ms:.2f} ms\n")
+                
                 print(acceleration)
                 set_optimized_acceleration(number_of_lane, number_of_vehicle, detected_list, acceleration, step)
             else:

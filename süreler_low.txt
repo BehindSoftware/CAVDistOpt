@@ -1,0 +1,645 @@
+Iteration 0 süresi: 372.74 ms
+Iteration 1 süresi: 87.38 ms
+Last Iteration 2 süresi: 63.51 ms
+Iteration 0 süresi: 58.43 ms
+Iteration 1 süresi: 57.41 ms
+Last Iteration 2 süresi: 58.16 ms
+Last Iteration 0 süresi: 15.30 ms
+Iteration 0 süresi: 25.13 ms
+Last Iteration 1 süresi: 29.15 ms
+Last Iteration 0 süresi: 12.99 ms
+Iteration 0 süresi: 25.36 ms
+Last Iteration 1 süresi: 26.36 ms
+Iteration 0 süresi: 97.26 ms
+Iteration 1 süresi: 92.92 ms
+Iteration 2 süresi: 75.64 ms
+Iteration 3 süresi: 79.22 ms
+Iteration 0 süresi: 68.01 ms
+Iteration 1 süresi: 84.35 ms
+Iteration 2 süresi: 78.19 ms
+Iteration 3 süresi: 74.05 ms
+Last Iteration 0 süresi: 12.62 ms
+Iteration 0 süresi: 28.55 ms
+Last Iteration 1 süresi: 30.48 ms
+Last Iteration 0 süresi: 17.04 ms
+Last Iteration 0 süresi: 15.27 ms
+Iteration 0 süresi: 28.92 ms
+Last Iteration 1 süresi: 27.56 ms
+Iteration 0 süresi: 85.12 ms
+Iteration 1 süresi: 84.23 ms
+Last Iteration 2 süresi: 89.68 ms
+Iteration 0 süresi: 102.84 ms
+Iteration 1 süresi: 76.50 ms
+Last Iteration 2 süresi: 78.58 ms
+Last Iteration 0 süresi: 11.96 ms
+Iteration 0 süresi: 22.67 ms
+Last Iteration 1 süresi: 27.04 ms
+Last Iteration 0 süresi: 11.35 ms
+Last Iteration 0 süresi: 12.67 ms
+Iteration 0 süresi: 25.57 ms
+Last Iteration 1 süresi: 23.36 ms
+Iteration 0 süresi: 82.36 ms
+Iteration 1 süresi: 77.15 ms
+Last Iteration 2 süresi: 83.38 ms
+Iteration 0 süresi: 62.91 ms
+Iteration 1 süresi: 73.53 ms
+Last Iteration 2 süresi: 68.68 ms
+Last Iteration 0 süresi: 13.80 ms
+Iteration 0 süresi: 26.04 ms
+Last Iteration 1 süresi: 22.50 ms
+Last Iteration 0 süresi: 10.54 ms
+Last Iteration 0 süresi: 15.37 ms
+Iteration 0 süresi: 22.61 ms
+Last Iteration 1 süresi: 21.89 ms
+Iteration 0 süresi: 92.64 ms
+Iteration 1 süresi: 81.57 ms
+Last Iteration 2 süresi: 88.71 ms
+Iteration 0 süresi: 71.57 ms
+Iteration 1 süresi: 74.78 ms
+Last Iteration 2 süresi: 78.21 ms
+Last Iteration 0 süresi: 12.96 ms
+Iteration 0 süresi: 24.11 ms
+Last Iteration 1 süresi: 25.57 ms
+Last Iteration 0 süresi: 11.21 ms
+Last Iteration 0 süresi: 16.89 ms
+Iteration 0 süresi: 25.12 ms
+Last Iteration 1 süresi: 25.74 ms
+Iteration 0 süresi: 76.09 ms
+Iteration 1 süresi: 84.32 ms
+Last Iteration 2 süresi: 86.25 ms
+Iteration 0 süresi: 70.39 ms
+Iteration 1 süresi: 74.50 ms
+Last Iteration 2 süresi: 74.26 ms
+Last Iteration 0 süresi: 16.20 ms
+Iteration 0 süresi: 26.34 ms
+Last Iteration 1 süresi: 21.37 ms
+Last Iteration 0 süresi: 11.41 ms
+Last Iteration 0 süresi: 13.61 ms
+Iteration 0 süresi: 25.88 ms
+Last Iteration 1 süresi: 26.23 ms
+Iteration 0 süresi: 74.14 ms
+Iteration 1 süresi: 82.14 ms
+Last Iteration 2 süresi: 78.27 ms
+Iteration 0 süresi: 64.41 ms
+Iteration 1 süresi: 68.22 ms
+Last Iteration 2 süresi: 75.53 ms
+Last Iteration 0 süresi: 12.06 ms
+Iteration 0 süresi: 23.85 ms
+Last Iteration 1 süresi: 24.05 ms
+Last Iteration 0 süresi: 12.54 ms
+Last Iteration 0 süresi: 14.87 ms
+Iteration 0 süresi: 25.93 ms
+Last Iteration 1 süresi: 26.72 ms
+Iteration 0 süresi: 105.60 ms
+Iteration 1 süresi: 82.27 ms
+Last Iteration 2 süresi: 93.04 ms
+Iteration 0 süresi: 86.17 ms
+Iteration 1 süresi: 70.48 ms
+Last Iteration 2 süresi: 69.21 ms
+Last Iteration 0 süresi: 12.99 ms
+Iteration 0 süresi: 25.01 ms
+Last Iteration 1 süresi: 22.63 ms
+Last Iteration 0 süresi: 13.27 ms
+Last Iteration 0 süresi: 15.86 ms
+Iteration 0 süresi: 20.31 ms
+Last Iteration 1 süresi: 23.16 ms
+Iteration 0 süresi: 79.08 ms
+Iteration 1 süresi: 89.34 ms
+Last Iteration 2 süresi: 83.43 ms
+Iteration 0 süresi: 73.87 ms
+Iteration 1 süresi: 74.69 ms
+Last Iteration 2 süresi: 80.17 ms
+Last Iteration 0 süresi: 11.71 ms
+Iteration 0 süresi: 24.52 ms
+Last Iteration 1 süresi: 28.01 ms
+Last Iteration 0 süresi: 13.26 ms
+Last Iteration 0 süresi: 11.68 ms
+Iteration 0 süresi: 19.94 ms
+Last Iteration 1 süresi: 24.84 ms
+Iteration 0 süresi: 79.28 ms
+Iteration 1 süresi: 91.63 ms
+Last Iteration 2 süresi: 92.77 ms
+Iteration 0 süresi: 86.73 ms
+Iteration 1 süresi: 76.79 ms
+Last Iteration 2 süresi: 70.51 ms
+Last Iteration 0 süresi: 16.18 ms
+Iteration 0 süresi: 31.13 ms
+Last Iteration 1 süresi: 25.28 ms
+Last Iteration 0 süresi: 12.03 ms
+Last Iteration 0 süresi: 12.57 ms
+Iteration 0 süresi: 19.83 ms
+Last Iteration 1 süresi: 28.63 ms
+Iteration 0 süresi: 77.49 ms
+Iteration 1 süresi: 74.71 ms
+Last Iteration 2 süresi: 82.57 ms
+Iteration 0 süresi: 64.41 ms
+Iteration 1 süresi: 70.64 ms
+Last Iteration 2 süresi: 78.29 ms
+Last Iteration 0 süresi: 12.94 ms
+Iteration 0 süresi: 23.36 ms
+Last Iteration 1 süresi: 27.38 ms
+Last Iteration 0 süresi: 11.03 ms
+Last Iteration 0 süresi: 15.77 ms
+Iteration 0 süresi: 22.78 ms
+Last Iteration 1 süresi: 23.10 ms
+Iteration 0 süresi: 77.51 ms
+Iteration 1 süresi: 79.75 ms
+Last Iteration 2 süresi: 101.84 ms
+Iteration 0 süresi: 64.80 ms
+Iteration 1 süresi: 73.14 ms
+Last Iteration 2 süresi: 68.43 ms
+Last Iteration 0 süresi: 11.91 ms
+Iteration 0 süresi: 24.29 ms
+Last Iteration 1 süresi: 27.38 ms
+Last Iteration 0 süresi: 13.53 ms
+Last Iteration 0 süresi: 13.46 ms
+Iteration 0 süresi: 23.39 ms
+Last Iteration 1 süresi: 29.47 ms
+Iteration 0 süresi: 71.98 ms
+Iteration 1 süresi: 91.64 ms
+Last Iteration 2 süresi: 79.96 ms
+Iteration 0 süresi: 69.87 ms
+Iteration 1 süresi: 68.36 ms
+Last Iteration 2 süresi: 79.06 ms
+Last Iteration 0 süresi: 12.49 ms
+Iteration 0 süresi: 27.49 ms
+Last Iteration 1 süresi: 22.98 ms
+Last Iteration 0 süresi: 14.10 ms
+Last Iteration 0 süresi: 14.51 ms
+Iteration 0 süresi: 21.71 ms
+Last Iteration 1 süresi: 21.94 ms
+Iteration 0 süresi: 78.74 ms
+Iteration 1 süresi: 78.80 ms
+Last Iteration 2 süresi: 84.85 ms
+Iteration 0 süresi: 78.64 ms
+Iteration 1 süresi: 79.88 ms
+Last Iteration 2 süresi: 71.69 ms
+Last Iteration 0 süresi: 10.34 ms
+Iteration 0 süresi: 24.35 ms
+Last Iteration 1 süresi: 24.47 ms
+Last Iteration 0 süresi: 13.33 ms
+Last Iteration 0 süresi: 12.43 ms
+Iteration 0 süresi: 24.81 ms
+Last Iteration 1 süresi: 25.04 ms
+Iteration 0 süresi: 102.55 ms
+Iteration 1 süresi: 81.77 ms
+Last Iteration 2 süresi: 81.91 ms
+Iteration 0 süresi: 67.26 ms
+Iteration 1 süresi: 73.12 ms
+Last Iteration 2 süresi: 81.96 ms
+Last Iteration 0 süresi: 15.21 ms
+Iteration 0 süresi: 24.70 ms
+Last Iteration 1 süresi: 24.35 ms
+Last Iteration 0 süresi: 12.47 ms
+Last Iteration 0 süresi: 15.54 ms
+Iteration 0 süresi: 23.44 ms
+Last Iteration 1 süresi: 25.17 ms
+Iteration 0 süresi: 74.65 ms
+Iteration 1 süresi: 78.95 ms
+Last Iteration 2 süresi: 89.10 ms
+Iteration 0 süresi: 74.53 ms
+Iteration 1 süresi: 68.23 ms
+Last Iteration 2 süresi: 71.44 ms
+Last Iteration 0 süresi: 9.74 ms
+Iteration 0 süresi: 21.85 ms
+Last Iteration 1 süresi: 22.08 ms
+Last Iteration 0 süresi: 12.00 ms
+Last Iteration 0 süresi: 10.74 ms
+Iteration 0 süresi: 21.82 ms
+Last Iteration 1 süresi: 27.31 ms
+Iteration 0 süresi: 76.30 ms
+Iteration 1 süresi: 87.97 ms
+Last Iteration 2 süresi: 110.37 ms
+Iteration 0 süresi: 64.40 ms
+Iteration 1 süresi: 68.12 ms
+Last Iteration 2 süresi: 84.69 ms
+Last Iteration 0 süresi: 11.75 ms
+Iteration 0 süresi: 25.18 ms
+Last Iteration 1 süresi: 30.11 ms
+Last Iteration 0 süresi: 17.19 ms
+Last Iteration 0 süresi: 15.27 ms
+Iteration 0 süresi: 19.28 ms
+Last Iteration 1 süresi: 21.89 ms
+Iteration 0 süresi: 81.51 ms
+Iteration 1 süresi: 82.83 ms
+Last Iteration 2 süresi: 84.93 ms
+Iteration 0 süresi: 68.60 ms
+Iteration 1 süresi: 74.29 ms
+Last Iteration 2 süresi: 70.62 ms
+Last Iteration 0 süresi: 12.35 ms
+Iteration 0 süresi: 22.12 ms
+Last Iteration 1 süresi: 26.64 ms
+Last Iteration 0 süresi: 13.83 ms
+Last Iteration 0 süresi: 16.14 ms
+Iteration 0 süresi: 25.09 ms
+Last Iteration 1 süresi: 26.12 ms
+Iteration 0 süresi: 79.13 ms
+Iteration 1 süresi: 82.15 ms
+Last Iteration 2 süresi: 84.10 ms
+Iteration 0 süresi: 67.91 ms
+Iteration 1 süresi: 67.42 ms
+Last Iteration 2 süresi: 85.11 ms
+Last Iteration 0 süresi: 13.44 ms
+Iteration 0 süresi: 21.81 ms
+Last Iteration 1 süresi: 26.15 ms
+Last Iteration 0 süresi: 13.47 ms
+Last Iteration 0 süresi: 16.58 ms
+Iteration 0 süresi: 23.27 ms
+Last Iteration 1 süresi: 26.91 ms
+Iteration 0 süresi: 86.49 ms
+Iteration 1 süresi: 84.61 ms
+Last Iteration 2 süresi: 94.32 ms
+Iteration 0 süresi: 69.68 ms
+Iteration 1 süresi: 73.15 ms
+Last Iteration 2 süresi: 73.61 ms
+Last Iteration 0 süresi: 15.91 ms
+Iteration 0 süresi: 20.38 ms
+Last Iteration 1 süresi: 28.38 ms
+Last Iteration 0 süresi: 11.16 ms
+Last Iteration 0 süresi: 12.81 ms
+Iteration 0 süresi: 26.33 ms
+Last Iteration 1 süresi: 25.53 ms
+Iteration 0 süresi: 80.33 ms
+Iteration 1 süresi: 75.72 ms
+Last Iteration 2 süresi: 95.27 ms
+Iteration 0 süresi: 69.05 ms
+Iteration 1 süresi: 76.82 ms
+Last Iteration 2 süresi: 68.86 ms
+Last Iteration 0 süresi: 15.83 ms
+Iteration 0 süresi: 20.50 ms
+Last Iteration 1 süresi: 27.57 ms
+Last Iteration 0 süresi: 33.71 ms
+Last Iteration 0 süresi: 9.68 ms
+Iteration 0 süresi: 23.02 ms
+Last Iteration 1 süresi: 25.61 ms
+Iteration 0 süresi: 89.27 ms
+Last Iteration 1 süresi: 85.73 ms
+Iteration 0 süresi: 72.75 ms
+Iteration 1 süresi: 81.59 ms
+Last Iteration 2 süresi: 72.63 ms
+Last Iteration 0 süresi: 13.53 ms
+Iteration 0 süresi: 22.73 ms
+Last Iteration 1 süresi: 26.05 ms
+Last Iteration 0 süresi: 12.98 ms
+Last Iteration 0 süresi: 14.49 ms
+Iteration 0 süresi: 21.92 ms
+Last Iteration 1 süresi: 27.67 ms
+Iteration 0 süresi: 80.51 ms
+Last Iteration 1 süresi: 76.39 ms
+Last Iteration 0 süresi: 61.79 ms
+Last Iteration 0 süresi: 13.28 ms
+Iteration 0 süresi: 23.15 ms
+Last Iteration 1 süresi: 22.59 ms
+Last Iteration 0 süresi: 14.38 ms
+Last Iteration 0 süresi: 12.54 ms
+Iteration 0 süresi: 21.48 ms
+Last Iteration 1 süresi: 30.87 ms
+Last Iteration 0 süresi: 92.63 ms
+Last Iteration 0 süresi: 77.61 ms
+Last Iteration 0 süresi: 12.25 ms
+Iteration 0 süresi: 29.84 ms
+Last Iteration 1 süresi: 25.92 ms
+Last Iteration 0 süresi: 14.28 ms
+Last Iteration 0 süresi: 15.13 ms
+Last Iteration 0 süresi: 25.45 ms
+Last Iteration 0 süresi: 82.40 ms
+Last Iteration 0 süresi: 83.12 ms
+Last Iteration 0 süresi: 9.31 ms
+Iteration 0 süresi: 23.09 ms
+Last Iteration 1 süresi: 31.77 ms
+Last Iteration 0 süresi: 12.85 ms
+Last Iteration 0 süresi: 36.55 ms
+Last Iteration 0 süresi: 23.31 ms
+Last Iteration 0 süresi: 82.53 ms
+Last Iteration 0 süresi: 14.32 ms
+Last Iteration 0 süresi: 11.55 ms
+Last Iteration 0 süresi: 14.97 ms
+Last Iteration 0 süresi: 14.38 ms
+Last Iteration 0 süresi: 16.83 ms
+Last Iteration 0 süresi: 18.31 ms
+Last Iteration 0 süresi: 14.04 ms
+Last Iteration 0 süresi: 12.08 ms
+Last Iteration 0 süresi: 13.67 ms
+Last Iteration 0 süresi: 12.99 ms
+Last Iteration 0 süresi: 18.53 ms
+Last Iteration 0 süresi: 13.49 ms
+Last Iteration 0 süresi: 15.26 ms
+Last Iteration 0 süresi: 14.56 ms
+Last Iteration 0 süresi: 12.64 ms
+Last Iteration 0 süresi: 12.01 ms
+Last Iteration 0 süresi: 15.99 ms
+Last Iteration 0 süresi: 14.65 ms
+Last Iteration 0 süresi: 15.32 ms
+Last Iteration 0 süresi: 11.93 ms
+Last Iteration 0 süresi: 12.82 ms
+Last Iteration 0 süresi: 14.43 ms
+Last Iteration 0 süresi: 9.95 ms
+Last Iteration 0 süresi: 13.35 ms
+Last Iteration 0 süresi: 17.74 ms
+Last Iteration 0 süresi: 13.90 ms
+Iteration 0 süresi: 23.31 ms
+Last Iteration 1 süresi: 26.93 ms
+Last Iteration 0 süresi: 10.65 ms
+Last Iteration 0 süresi: 13.44 ms
+Last Iteration 0 süresi: 13.69 ms
+Last Iteration 0 süresi: 12.56 ms
+Iteration 0 süresi: 18.87 ms
+Last Iteration 1 süresi: 24.57 ms
+Last Iteration 0 süresi: 16.08 ms
+Last Iteration 0 süresi: 16.89 ms
+Last Iteration 0 süresi: 21.53 ms
+Last Iteration 0 süresi: 16.20 ms
+Last Iteration 0 süresi: 11.02 ms
+Iteration 0 süresi: 26.02 ms
+Last Iteration 1 süresi: 26.29 ms
+Last Iteration 0 süresi: 14.07 ms
+Iteration 0 süresi: 24.94 ms
+Last Iteration 1 süresi: 23.13 ms
+Last Iteration 0 süresi: 13.37 ms
+Last Iteration 0 süresi: 13.62 ms
+Last Iteration 0 süresi: 11.96 ms
+Iteration 0 süresi: 23.16 ms
+Last Iteration 1 süresi: 28.92 ms
+Last Iteration 0 süresi: 18.99 ms
+Iteration 0 süresi: 23.89 ms
+Last Iteration 1 süresi: 23.47 ms
+Last Iteration 0 süresi: 13.83 ms
+Last Iteration 0 süresi: 12.42 ms
+Last Iteration 0 süresi: 14.89 ms
+Iteration 0 süresi: 36.95 ms
+Iteration 1 süresi: 37.43 ms
+Iteration 2 süresi: 36.11 ms
+Iteration 3 süresi: 40.57 ms
+Last Iteration 0 süresi: 13.68 ms
+Iteration 0 süresi: 23.47 ms
+Last Iteration 1 süresi: 21.36 ms
+Last Iteration 0 süresi: 10.54 ms
+Last Iteration 0 süresi: 10.00 ms
+Last Iteration 0 süresi: 12.81 ms
+Iteration 0 süresi: 34.57 ms
+Iteration 1 süresi: 38.37 ms
+Iteration 2 süresi: 46.62 ms
+Iteration 3 süresi: 39.28 ms
+Last Iteration 0 süresi: 10.41 ms
+Iteration 0 süresi: 23.96 ms
+Last Iteration 1 süresi: 28.83 ms
+Last Iteration 0 süresi: 12.35 ms
+Iteration 0 süresi: 24.79 ms
+Last Iteration 1 süresi: 25.56 ms
+Last Iteration 0 süresi: 15.42 ms
+Iteration 0 süresi: 30.75 ms
+Last Iteration 1 süresi: 39.46 ms
+Last Iteration 0 süresi: 11.17 ms
+Iteration 0 süresi: 20.98 ms
+Last Iteration 1 süresi: 25.97 ms
+Last Iteration 0 süresi: 21.98 ms
+Last Iteration 0 süresi: 21.86 ms
+Last Iteration 0 süresi: 13.20 ms
+Iteration 0 süresi: 39.53 ms
+Last Iteration 1 süresi: 33.77 ms
+Last Iteration 0 süresi: 14.58 ms
+Iteration 0 süresi: 26.00 ms
+Last Iteration 1 süresi: 27.28 ms
+Last Iteration 0 süresi: 13.55 ms
+Last Iteration 0 süresi: 23.51 ms
+Last Iteration 0 süresi: 10.82 ms
+Iteration 0 süresi: 31.71 ms
+Last Iteration 1 süresi: 32.82 ms
+Last Iteration 0 süresi: 14.13 ms
+Iteration 0 süresi: 31.60 ms
+Last Iteration 1 süresi: 31.84 ms
+Last Iteration 0 süresi: 13.80 ms
+Last Iteration 0 süresi: 25.50 ms
+Last Iteration 0 süresi: 12.54 ms
+Iteration 0 süresi: 37.67 ms
+Last Iteration 1 süresi: 35.46 ms
+Last Iteration 0 süresi: 12.34 ms
+Iteration 0 süresi: 24.37 ms
+Last Iteration 1 süresi: 23.46 ms
+Last Iteration 0 süresi: 18.80 ms
+Last Iteration 0 süresi: 27.36 ms
+Last Iteration 0 süresi: 11.91 ms
+Iteration 0 süresi: 34.88 ms
+Last Iteration 1 süresi: 35.58 ms
+Last Iteration 0 süresi: 15.37 ms
+Iteration 0 süresi: 24.85 ms
+Last Iteration 1 süresi: 29.39 ms
+Last Iteration 0 süresi: 15.72 ms
+Last Iteration 0 süresi: 21.36 ms
+Last Iteration 0 süresi: 11.82 ms
+Iteration 0 süresi: 38.34 ms
+Last Iteration 1 süresi: 40.07 ms
+Last Iteration 0 süresi: 13.47 ms
+Iteration 0 süresi: 24.81 ms
+Last Iteration 1 süresi: 43.05 ms
+Last Iteration 0 süresi: 18.31 ms
+Last Iteration 0 süresi: 33.15 ms
+Last Iteration 0 süresi: 17.02 ms
+Iteration 0 süresi: 34.93 ms
+Last Iteration 1 süresi: 37.33 ms
+Last Iteration 0 süresi: 14.33 ms
+Iteration 0 süresi: 27.40 ms
+Last Iteration 1 süresi: 26.03 ms
+Last Iteration 0 süresi: 14.76 ms
+Last Iteration 0 süresi: 27.27 ms
+Last Iteration 0 süresi: 13.16 ms
+Iteration 0 süresi: 37.67 ms
+Last Iteration 1 süresi: 60.50 ms
+Last Iteration 0 süresi: 13.72 ms
+Iteration 0 süresi: 27.87 ms
+Last Iteration 1 süresi: 36.27 ms
+Last Iteration 0 süresi: 12.99 ms
+Last Iteration 0 süresi: 26.48 ms
+Last Iteration 0 süresi: 12.10 ms
+Iteration 0 süresi: 31.18 ms
+Last Iteration 1 süresi: 37.79 ms
+Last Iteration 0 süresi: 15.96 ms
+Iteration 0 süresi: 22.37 ms
+Last Iteration 1 süresi: 24.90 ms
+Last Iteration 0 süresi: 23.91 ms
+Last Iteration 0 süresi: 27.08 ms
+Last Iteration 0 süresi: 16.15 ms
+Iteration 0 süresi: 33.12 ms
+Last Iteration 1 süresi: 35.79 ms
+Last Iteration 0 süresi: 14.40 ms
+Iteration 0 süresi: 27.59 ms
+Last Iteration 1 süresi: 24.18 ms
+Last Iteration 0 süresi: 14.03 ms
+Last Iteration 0 süresi: 24.66 ms
+Last Iteration 0 süresi: 17.64 ms
+Iteration 0 süresi: 34.46 ms
+Last Iteration 1 süresi: 36.36 ms
+Last Iteration 0 süresi: 12.20 ms
+Iteration 0 süresi: 23.43 ms
+Last Iteration 1 süresi: 25.58 ms
+Last Iteration 0 süresi: 22.07 ms
+Last Iteration 0 süresi: 29.77 ms
+Last Iteration 0 süresi: 18.15 ms
+Iteration 0 süresi: 39.72 ms
+Last Iteration 1 süresi: 34.90 ms
+Last Iteration 0 süresi: 11.01 ms
+Iteration 0 süresi: 25.70 ms
+Last Iteration 1 süresi: 23.21 ms
+Last Iteration 0 süresi: 10.30 ms
+Last Iteration 0 süresi: 30.01 ms
+Last Iteration 0 süresi: 13.76 ms
+Last Iteration 0 süresi: 13.48 ms
+Last Iteration 0 süresi: 25.05 ms
+Last Iteration 0 süresi: 12.03 ms
+Last Iteration 0 süresi: 15.84 ms
+Last Iteration 0 süresi: 31.06 ms
+Last Iteration 0 süresi: 13.89 ms
+Last Iteration 0 süresi: 12.06 ms
+Last Iteration 0 süresi: 36.37 ms
+Last Iteration 0 süresi: 13.78 ms
+Last Iteration 0 süresi: 27.56 ms
+Last Iteration 0 süresi: 12.54 ms
+Last Iteration 0 süresi: 21.53 ms
+Last Iteration 0 süresi: 11.76 ms
+Last Iteration 0 süresi: 11.42 ms
+Last Iteration 0 süresi: 27.57 ms
+Last Iteration 0 süresi: 12.18 ms
+Last Iteration 0 süresi: 10.72 ms
+Last Iteration 0 süresi: 27.86 ms
+Last Iteration 0 süresi: 18.17 ms
+Last Iteration 0 süresi: 11.66 ms
+Last Iteration 0 süresi: 16.34 ms
+Last Iteration 0 süresi: 29.63 ms
+Last Iteration 0 süresi: 10.55 ms
+Last Iteration 0 süresi: 13.04 ms
+Last Iteration 0 süresi: 24.93 ms
+Last Iteration 0 süresi: 13.37 ms
+Last Iteration 0 süresi: 14.58 ms
+Last Iteration 0 süresi: 23.40 ms
+Last Iteration 0 süresi: 14.75 ms
+Last Iteration 0 süresi: 14.72 ms
+Last Iteration 0 süresi: 22.37 ms
+Last Iteration 0 süresi: 15.12 ms
+Last Iteration 0 süresi: 20.62 ms
+Iteration 0 süresi: 32.46 ms
+Last Iteration 1 süresi: 27.16 ms
+Last Iteration 0 süresi: 39.78 ms
+Last Iteration 0 süresi: 19.41 ms
+Last Iteration 0 süresi: 10.90 ms
+Last Iteration 0 süresi: 16.56 ms
+Last Iteration 0 süresi: 15.63 ms
+Last Iteration 0 süresi: 10.94 ms
+Last Iteration 0 süresi: 13.36 ms
+Last Iteration 0 süresi: 12.56 ms
+Last Iteration 0 süresi: 15.23 ms
+Last Iteration 0 süresi: 21.50 ms
+Last Iteration 0 süresi: 11.11 ms
+Last Iteration 0 süresi: 12.35 ms
+Last Iteration 0 süresi: 12.19 ms
+Last Iteration 0 süresi: 9.15 ms
+Last Iteration 0 süresi: 13.32 ms
+Last Iteration 0 süresi: 18.13 ms
+Last Iteration 0 süresi: 15.82 ms
+Last Iteration 0 süresi: 15.07 ms
+Last Iteration 0 süresi: 14.59 ms
+Last Iteration 0 süresi: 16.53 ms
+Last Iteration 0 süresi: 17.21 ms
+Last Iteration 0 süresi: 9.85 ms
+Last Iteration 0 süresi: 12.77 ms
+Last Iteration 0 süresi: 14.13 ms
+Last Iteration 0 süresi: 13.20 ms
+Last Iteration 0 süresi: 14.06 ms
+Last Iteration 0 süresi: 23.14 ms
+Last Iteration 0 süresi: 10.70 ms
+Last Iteration 0 süresi: 10.00 ms
+Last Iteration 0 süresi: 13.32 ms
+Last Iteration 0 süresi: 15.06 ms
+Last Iteration 0 süresi: 12.52 ms
+Last Iteration 0 süresi: 16.28 ms
+Last Iteration 0 süresi: 15.95 ms
+Last Iteration 0 süresi: 13.43 ms
+Last Iteration 0 süresi: 11.38 ms
+Last Iteration 0 süresi: 11.26 ms
+Last Iteration 0 süresi: 15.83 ms
+Last Iteration 0 süresi: 12.62 ms
+Last Iteration 0 süresi: 13.24 ms
+Last Iteration 0 süresi: 15.78 ms
+Last Iteration 0 süresi: 16.29 ms
+Last Iteration 0 süresi: 16.78 ms
+Last Iteration 0 süresi: 16.88 ms
+Last Iteration 0 süresi: 14.05 ms
+Last Iteration 0 süresi: 12.14 ms
+Last Iteration 0 süresi: 14.25 ms
+Last Iteration 0 süresi: 16.19 ms
+Last Iteration 0 süresi: 11.13 ms
+Last Iteration 0 süresi: 12.62 ms
+Last Iteration 0 süresi: 12.55 ms
+Last Iteration 0 süresi: 14.24 ms
+Last Iteration 0 süresi: 14.46 ms
+Last Iteration 0 süresi: 15.88 ms
+Last Iteration 0 süresi: 16.19 ms
+Last Iteration 0 süresi: 14.05 ms
+Last Iteration 0 süresi: 13.29 ms
+Last Iteration 0 süresi: 13.24 ms
+Last Iteration 0 süresi: 11.26 ms
+Last Iteration 0 süresi: 11.45 ms
+Last Iteration 0 süresi: 18.23 ms
+Last Iteration 0 süresi: 11.81 ms
+Last Iteration 0 süresi: 12.54 ms
+Last Iteration 0 süresi: 12.23 ms
+Last Iteration 0 süresi: 14.52 ms
+Last Iteration 0 süresi: 12.03 ms
+Last Iteration 0 süresi: 12.49 ms
+Last Iteration 0 süresi: 10.58 ms
+Last Iteration 0 süresi: 10.81 ms
+Last Iteration 0 süresi: 12.96 ms
+Last Iteration 0 süresi: 11.17 ms
+Last Iteration 0 süresi: 11.55 ms
+Last Iteration 0 süresi: 13.60 ms
+Last Iteration 0 süresi: 13.34 ms
+Last Iteration 0 süresi: 10.90 ms
+Last Iteration 0 süresi: 11.66 ms
+Last Iteration 0 süresi: 12.86 ms
+Last Iteration 0 süresi: 17.47 ms
+Last Iteration 0 süresi: 12.90 ms
+Last Iteration 0 süresi: 15.86 ms
+Last Iteration 0 süresi: 13.29 ms
+Last Iteration 0 süresi: 13.30 ms
+Last Iteration 0 süresi: 11.38 ms
+Last Iteration 0 süresi: 13.83 ms
+Last Iteration 0 süresi: 17.08 ms
+Last Iteration 0 süresi: 11.23 ms
+Last Iteration 0 süresi: 16.45 ms
+Last Iteration 0 süresi: 13.29 ms
+Last Iteration 0 süresi: 14.59 ms
+Last Iteration 0 süresi: 12.17 ms
+Last Iteration 0 süresi: 14.09 ms
+Last Iteration 0 süresi: 15.37 ms
+Last Iteration 0 süresi: 15.08 ms
+Last Iteration 0 süresi: 19.97 ms
+Last Iteration 0 süresi: 13.67 ms
+Last Iteration 0 süresi: 11.87 ms
+Last Iteration 0 süresi: 14.12 ms
+Last Iteration 0 süresi: 15.35 ms
+Last Iteration 0 süresi: 19.09 ms
+Last Iteration 0 süresi: 16.94 ms
+Last Iteration 0 süresi: 10.56 ms
+Last Iteration 0 süresi: 15.49 ms
+Last Iteration 0 süresi: 12.64 ms
+Last Iteration 0 süresi: 10.51 ms
+Last Iteration 0 süresi: 15.93 ms
+Last Iteration 0 süresi: 15.45 ms
+Last Iteration 0 süresi: 14.71 ms
+Last Iteration 0 süresi: 15.86 ms
+Last Iteration 0 süresi: 14.20 ms
+Last Iteration 0 süresi: 13.48 ms
+Last Iteration 0 süresi: 13.34 ms
+Last Iteration 0 süresi: 15.77 ms
+
+3 Minimum süre (ms) → en küçük 3 değer:
+
+9.15, 9.31, 9.68
+
+
+3 Maximum süre (ms) → en büyük 3 değer:
+
+372.74, 110.37, 105.60
+
+
+Ortalama süre (ms) → tüm değerlerin toplamı / değer sayısı:
+Yaklaşık: 41.9 ms

@@ -3,6 +3,7 @@ import numpy as np
 from dist.intersected import intersected_optimization, parsing_vehicle_data
 from dist.platooning import platooning_optimization, parsing_vehicle_data_platooning
 from dist.simulator import *
+import time
 
 #DESC CONF: Consensus ADMM parameters
 WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
@@ -234,7 +235,7 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
     xr_dict = {}
 
     for iteration in range(parameters_intersected[13]): # parameters_intersected[13] = MAX_ITER
-
+        start = time.perf_counter()
         # Store previous values of consensus variables for dual residual calculation
         z_prev = np.copy(z)
         print("Iteration:" + str(iteration))
@@ -291,9 +292,17 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
         # Step 5: Convergence check
 
         if check_convergence(x, z, z_prev, length_of_lanes, parameters_intersected[15], parameters_intersected[16]):
-
+            end = time.perf_counter()
+            elapsed_ms = (end - start) * 1000  # milisaniye
+            with open("süreler.txt", "a", encoding="utf-8") as f:
+                f.write(f"Last Iteration {iteration} süresi: {elapsed_ms:.2f} ms\n")
             print(f"Convergence reached after {iteration} iterations.")
             break
+        else:
+            end = time.perf_counter()
+            elapsed_ms = (end - start) * 1000  # milisaniye
+            with open("süreler.txt", "a", encoding="utf-8") as f:
+                f.write(f"Iteration {iteration} süresi: {elapsed_ms:.2f} ms\n")
 
     print(result)
     print(ids_for_result)
