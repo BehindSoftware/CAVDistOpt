@@ -10,37 +10,47 @@ WEIGHTED_AVERAGE_CONSENSUS_ACTIVE = False
 
 #DESC CONF: END
 
-#DESC CONV CRIT: Function to check convergence
-def check_convergence(x, z_new, z_prev, length_of_lanes, TOLERANCE, RHO):
-    """Convergence check based on primal and dual residuals."""
-    # Initialize residuals
-    primal_residual_sum = 0
-    dual_residual_sum = 0
+def check_convergence(x, z_new, z_prev, length_of_lanes, TOLERANCE, RHO, u):
+    """Convergence check with adaptive rho that keeps u as object array."""
 
-    # Compute residuals for each lane
+    primal_residual_sum = 0.0
+    dual_residual_sum = 0.0
+
     for lane_number in range(len(length_of_lanes)):
-        
-        # Compute primal residuals for the current lane
+        # primal residual
         diff = x[lane_number] - z_new[lane_number]
         mask = x[lane_number] != -1
         primal_residual_sum += np.linalg.norm(diff[mask])
-        #print(primal_residual_sum)
 
-        # Compute dual residuals for the current lane using the change in consensus variables
+        # dual residual
         diff2 = z_new[lane_number] - z_prev[lane_number]
         mask2 = x[lane_number] != -1
         dual_residual_sum += np.linalg.norm(diff2[mask2])
-        #print(dual_residual_sum)
 
-    # Compute overall residuals
     primal_residual = primal_residual_sum
     dual_residual = RHO * dual_residual_sum
 
-    print(primal_residual, dual_residual)
+    print(f"Primal: {primal_residual:.6f}, Dual: {dual_residual:.6f}, RHO: {RHO}")
 
-    # Check convergence
-    return (primal_residual < TOLERANCE) and (dual_residual < TOLERANCE)
-#DESC CONV CRIT: END
+    # === Adaptive rho update ===
+    mu = 3.0
+    tau_inc = 1.02
+    tau_dec = 1.02
+
+
+    if primal_residual > mu * dual_residual:
+        RHO /= tau_dec
+        for lane_number in range(len(u)):
+            u[lane_number] = u[lane_number] / tau_dec
+    elif dual_residual > mu * primal_residual:
+        RHO *= tau_inc
+        for lane_number in range(len(u)):
+            u[lane_number] = u[lane_number] * tau_inc
+
+    converged = (primal_residual < TOLERANCE) and (dual_residual < TOLERANCE)
+
+    return converged, RHO, u
+
 
 #DESC PREP INTER: Intersected cars data preparation -> Init z values
 def prepare_data(intersected_list, v_intersected, x_intersected, xr_cons_intersected, x_pos_intersected, map_to_lane, map_to_vehicle_num, number_of_vehicle, ids_for_result, iteration, z):
@@ -291,17 +301,29 @@ def consensus_admm_algorithm(intersected_information,platooning_information, map
 
         # Step 5: Convergence check
 
-        if check_convergence(x, z, z_prev, length_of_lanes, parameters_intersected[15], parameters_intersected[16]):
+        converged, RHO, u = check_convergence(
+            x, z, z_prev,
+            length_of_lanes,
+            parameters_intersected[15],  # TOLERANCE
+            parameters_intersected[16],  # RHO
+            u
+        )
+        
+        file_prefix = parameters_intersected[2]
+        extension = ".txt"
+        filename = f"{file_prefix}_süreler{extension}"
+
+        if converged:
             end = time.perf_counter()
             elapsed_ms = (end - start) * 1000  # milisaniye
-            with open("süreler.txt", "a", encoding="utf-8") as f:
+            with open(filename, "a", encoding="utf-8") as f:
                 f.write(f"Last Iteration {iteration} süresi: {elapsed_ms:.2f} ms\n")
             print(f"Convergence reached after {iteration} iterations.")
             break
         else:
             end = time.perf_counter()
             elapsed_ms = (end - start) * 1000  # milisaniye
-            with open("süreler.txt", "a", encoding="utf-8") as f:
+            with open(filename, "a", encoding="utf-8") as f:
                 f.write(f"Iteration {iteration} süresi: {elapsed_ms:.2f} ms\n")
 
     print(result)

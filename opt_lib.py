@@ -125,7 +125,7 @@ def get_optimized_acceleration(number_of_lane, number_of_vehicle, v_input, x_inp
     # Create a solver
     #glpk, gurobi_persistent
     #opt = pyo.SolverFactory('glpk')
-    opt = pyo.SolverFactory("gurobi_persistent", solver_io="python")
+    opt = pyo.SolverFactory("gurobi_persistent", solver_io="python", verbose=True)
 
     # Create a model instance and optimize
     instance = model.create_instance()

@@ -128,7 +128,7 @@ def optimized_case(step,parameters):
         #uncontrolled_case_TC4(step)
         #uncontrolled_case_TC5(step)
         #uncontrolled_case_TC1_dist(step)
-        parameters.append(uncontrolled_case_TC2_dist(step)) #Vehicle numbers
+        parameters.append(uncontrolled_case_TC3_dist(step)) #Vehicle numbers
         #uncontrolled_case_TC3_dist(step)
         #uncontrolled_case_TC4_dist(step)
         print("Optimized case has been activated.")
