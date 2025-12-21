@@ -32,14 +32,14 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     constraints = []
     local_v = -1
     distance = -1
-    result = 0 #Not correct way as 0 acceleration
+    result = 0 #Not correct way as 0 acceleration -> Fail-Safe
     local_v_flag = False
     #car_index means laneID
     distances_dict[(car_index, 1)] = 0
     xr_dict[(car_index, 1)] = 0
 
     if(number_of_vehicle==0):
-        print("There is no vehicle in the intersection")
+        print("[Result]:There is no vehicle in the intersection")
         return result, local_v
     else:
         #decision variables (scan each lane and define variable for having car) #can be filtered like platooning, we can define variables for just need of them
@@ -64,7 +64,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     # Velocity constraints: v should be between 0 and epsilon_prime
     if xr_cons[(car_index, 1)] != 0:
-        constraints.append(v[car_index, 1] >= 0)  # v >= 0 (nonnegative)
+        constraints.append(v[car_index, 1] > 0)  # v >= 0 (nonnegative)
         constraints.append(v[car_index, 1] <= epsilon_prime)  # v <= epsilon_prime
 
     # Acceleration constraints: a should be between alfa and alfa_prime
@@ -76,7 +76,7 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
         cp.sum([
             (xr_cons[(i, 1)] - x[i, 1]) +
             gamma * cp.abs(v[i, 1] - v_input[(i, 1)]) 
-            #+ (RHO / 2) * ((F - x_input[(i, 1)]) * cp.inv_pos(v[i, 1]) - z + u) #Soft Constraint is removed because of non-feasibility/un-bound
+            + (RHO / 2) * ((F - x_input[(i, 1)]) * cp.inv_pos(v[i, 1]) - z + u) #Soft Constraint is removed because of non-feasibility/un-bound
             for i in range(car_index, car_index + 1)
             if xr_cons.get((i, 1), 0) != 0
         ])
@@ -88,15 +88,35 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
     # Problem
     problem = cp.Problem(objective, constraints)
 
-    if problem.is_dqcp():
-        problem.solve(solver=cp.GUROBI, qcp=True)
+    # if problem.is_dqcp():
+    #     problem.solve(solver=cp.GUROBI, qcp=True)#, verbose=True)
+    # else:
+    #     try:
+    #         problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)#, verbose=True)
+    #     except cp.error.DCPError as e:
+    #         print("[Result]:DCP Error:", e)
+    #         print("DCP-compliant:", problem.is_dcp())
+    #         return result, local_v
+
+    problem = cp.Problem(objective, constraints)
+
+    if problem.is_dcp():
+        problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=True)#, verbose=True)
+        print("Problem is dcp.")
+
+    elif problem.is_dqcp():
+        problem.solve(solver=cp.GUROBI, qcp=True, reoptimize=True, presolve=True)#, verbose=True)
+        print("Problem is dqcp.")
+
     else:
-        try:
-            problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False)
-        except cp.error.DCPError as e:
-            print("DCP Error:", e)
-            print("DCP-compliant:", problem.is_dcp())
-            return result, local_v
+        problem.solve(
+            solver=cp.GUROBI,
+            nonconvex=True,
+            reoptimize=True, 
+            presolve=True
+        )
+        print("Problem is nonconvex.")
+
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
@@ -106,13 +126,13 @@ def intersected_optimization(number_of_vehicle, v_input, x_input, xr_cons, x_pos
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
-        print("Problem is infeasible.")
+        print("[Result]:Problem is infeasible.")
         return result, local_v
     elif problem.status == cp.UNBOUNDED:
-        print("Problem is unbounded.")
+        print("[Result]:Problem is unbounded.")
         return result, local_v
     else:
-        print("Solution found.")
+        print("[Result]:Solution found.")
         if (car_index, 1) in x and x[(car_index, 1)].value is not None:
             distance=x[(car_index, 1)].value #X_local output
             result=a[(car_index, 1)].value

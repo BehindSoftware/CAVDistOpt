@@ -113,9 +113,26 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
 
     # Problem
     problem = cp.Problem(objective, constraints)
-    print("DCP-compliant:", problem.is_dcp())
-    if(problem.is_dcp()==True):
-        problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False, nonconvex=True)
+    # print("DCP-compliant:", problem.is_dcp())
+    # if(problem.is_dcp()==True):
+    #     problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=False, nonconvex=True)#, verbose=True)
+
+    if problem.is_dcp():
+        problem.solve(solver=cp.GUROBI, reoptimize=True, presolve=True)#, verbose=True)
+        print("Problem is dcp.")
+
+    elif problem.is_dqcp():
+        problem.solve(solver=cp.GUROBI, qcp=True, reoptimize=True, presolve=True)#, verbose=True)
+        print("Problem is dqcp.")
+
+    else:
+        problem.solve(
+            solver=cp.GUROBI,
+            nonconvex=True,
+            reoptimize=True, 
+            presolve=True
+        )
+        print("Problem is nonconvex.")
 
     #acceleration = {key: a[key].value for key in a}
     #distance = {key: x[key].value for key in x}
@@ -127,13 +144,13 @@ def platooning_optimization(number_of_lane, number_of_vehicle, v_input, x_input,
 
     # Check the solution status
     if problem.status == cp.INFEASIBLE:
-        print("Problem is infeasible.")
+        print("[Result]:Problem is infeasible.")
         return result, local_v
     elif problem.status == cp.UNBOUNDED:
-        print("Problem is unbounded.")
+        print("[Result]:Problem is unbounded.")
         return result, local_v
     else:
-        print("Solution found.")
+        print("[Result]:Solution found.")
         if (number_of_lane, car_index) in x and x[(number_of_lane, car_index)].value is not None:
             distance=x[(number_of_lane, car_index)].value
             result=a[(number_of_lane, car_index)].value
