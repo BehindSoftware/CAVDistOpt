@@ -23,11 +23,11 @@ from TCs_dist import uncontrolled_case_TC1_dist, sumocontrolled_case_TC1_dist, s
 #DESC Conf: Panel for configurations
 LOGGER_ACTIVE = False
 OPTIMIZATION_ACTIVE = True #For use optimization in the intersection
-SUMO_ACTIVE = True
+SUMO_ACTIVE = False
 MAPCREATION_ACTIVE = True #Creating the generation of map according to raw_intersection_num,column_intersection_num,edge_len,detector_pos
 MAPGENERATION_ACTIVE = False #Manhattan generation usage
 ADDMANUALVEHICLE_ACTIVE = False #Adding to new vehicle for present scenario 
-ROUTECREATION_ACTIVE = False #Creating the generation of route file
+ROUTECREATION_ACTIVE = True #Creating the generation of route file
 TL = False #Adding Traffic_Lights
 AUTO_START = True
 
@@ -236,7 +236,7 @@ if __name__ == "__main__":
             
             #generation rou.xml according to net.xml
             if(ROUTECREATION_ACTIVE==True):
-                os.system("python3 tools/randomTrips.py -n data/cross.nettest.xml -e 50 --route-file data/cross.routest.xml --validate ")
+                os.system("python3 /usr/share/sumo/tools/randomTrips.py -n data/cross.nettest.xml -e 100 --route-file data/cross.routest.xml --validate ")
 
         elif(MAPGENERATION_ACTIVE==True):
             network_file_creation(parameters[9],parameters[10],parameters[8])

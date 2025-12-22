@@ -1,2 +1,2 @@
 cd /usr/share/sumo/tools/route
-./sort_routes.py /mnt/c/Users/user/Downloads/CAVOptTerm4Start/CAVDistOpt/data/cross.routest_dist.xml -o /mnt/c/Users/user/Downloads/CAVOptTerm4Start/CAVDistOpt/data/cross.routest_distTC1.xml
+./sort_routes.py /mnt/c/Users/user/Downloads/CAVOptTerm4Start/CAVDistOpt/data/cross.routest_dist.xml -o /mnt/c/Users/user/Downloads/CAVOptTerm4Start/CAVDistOpt/data/cross.routest.xml
